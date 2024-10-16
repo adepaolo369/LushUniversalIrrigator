@@ -5,8 +5,8 @@ abstract class LuiTextTheme
   static const TextStyle luiHeader = TextStyle(
     fontFamily: 'Poppins',
     color: Colors.white,
-    fontSize: 40,
+    fontSize: 39,
     fontStyle: FontStyle.italic,
-    height: 0.7,
+    height: 0.1,
     fontWeight: FontWeight.w600);
 }
