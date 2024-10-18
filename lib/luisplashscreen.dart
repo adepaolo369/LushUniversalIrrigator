@@ -21,7 +21,7 @@ class _luiSplashScreenState extends State<luiSplashScreen> with SingleTickerProv
 
     Future.delayed(Duration(seconds: 2),()
     {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen(),));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen(),));
     });
   }
 
@@ -63,7 +63,7 @@ class _luiSplashScreenState extends State<luiSplashScreen> with SingleTickerProv
          color: Colors.lightBlue,
          )),
          Text('Lush Universal Irrigator',
-           style: LuiTextTheme.luiHeader,
+           style: LuiTextTheme.luiH1,
          )
          ]
      )
