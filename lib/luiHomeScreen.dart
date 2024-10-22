@@ -13,8 +13,8 @@ class HomeScreenState extends State<HomeScreen>
 
   Widget build(BuildContext context)
   {
-    double currentheight = MediaQuery.of(context).size.height;
-    double currentwidth = MediaQuery.of(context).size.width;
+    double currentHeight = MediaQuery.of(context).size.height;
+    double currentWidth = MediaQuery.of(context).size.width;
     return Scaffold
       (
       appBar: AppBar(
@@ -26,11 +26,12 @@ class HomeScreenState extends State<HomeScreen>
         width: double.infinity,
         height: double.infinity,
         child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children:
-            [Text('Welcome to LUI!'),
-              const SizedBox(height: 20), // Adds spacing between widgets
-              const Text('Enjoy smart irrigation!'),]
+            [SizedBox(height: currentHeight * 0.30),
+            Text('Welcome to LUI!', style: LuiTextTheme.luiH1,),
+              SizedBox(height: currentHeight * 0.05), // Adds spacing between widgets
+              const Text(''),]
       ),
 
       )
