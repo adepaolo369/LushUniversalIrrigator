@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lui_project/luisplashscreen.dart';
+import 'package:lui_project/common/systemVars.dart';
 import 'luiHomeScreen.dart';
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemInfoHandler.init(); // Initialize preferences
   runApp(const MyApp());
 }
 

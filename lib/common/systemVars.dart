@@ -30,8 +30,14 @@ class SystemInfoHandler
    }
 
    // Save boolean value.
-   Future<void> setDarkMode(bool setupValue) async {
+   Future<void> setSetUpStatus(bool setupValue) async {
       await dataSaved?.setBool(setupComplete, setupValue);
+   }
+
+   // Retrieve boolean value.
+   bool isSetupComplete()
+   {
+      return dataSaved?.getBool(setupComplete) ?? false;
    }
 
    /// Save a Bluetooth device ID to SharedPreferences
