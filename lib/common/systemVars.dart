@@ -5,8 +5,9 @@ import 'dart:convert';
 class SystemInfoHandler
 {
    static const setupComplete = 'setupComp';
-   static const deviceID = Null;
+   static const deviceID = "deviceID";
 
+   static SharedPreferences? dataSaved;
 
    static final SystemInfoHandler instance = SystemInfoHandler._internal();
 
@@ -17,8 +18,68 @@ class SystemInfoHandler
 
    SystemInfoHandler._internal();
 
+   static Future<void> init() async
+   {
+      dataSaved = await SharedPreferences.getInstance();
+   }
 
 
+   bool deviceSetupComplete()
+   {
+      return dataSaved?.getBool(setupComplete) ?? false;
+   }
+
+   // Save boolean value.
+   Future<void> setDarkMode(bool setupValue) async {
+      await dataSaved?.setBool(setupComplete, setupValue);
+   }
+
+   /// Save a Bluetooth device ID to SharedPreferences
+   static Future<void> saveDeviceID(String dID) async
+   {
+      await dataSaved?.setString(deviceID, dID);
+   }
+   /// Retrieve the Bluetooth device ID from SharedPreferences
+   static String? getDeviceID() {
+      return dataSaved?.getString(deviceID);
+   }
+
+   /// Clear the Bluetooth device ID (optional)
+   static Future<void> clearDeviceID() async {
+      await dataSaved?.remove(deviceID);
+   }
+
+
+
+   Future<void> saveValves(List<Valve> valves) async
+   {
+      final prefs = await SharedPreferences.getInstance();
+
+      // Convert the List<Valve> to a List<Map> and then to a JSON String.
+      String jsonString = jsonEncode(valves.map((valve) => valve.toJson()).toList());
+
+      // Save the JSON string to SharedPreferences.
+      await prefs.setString('valves', jsonString);
+   }
+
+   Future<List<Valve>> getValves() async
+   {
+      final prefs = await SharedPreferences.getInstance();
+
+      // Get the JSON string from SharedPreferences.
+      String? jsonString = prefs.getString('users');
+
+      if (jsonString != null)
+      {
+         // Decode the JSON string into a List of Maps.
+         List<dynamic> jsonList = jsonDecode(jsonString);
+
+         // Convert each Map to a Valve object.
+         return jsonList.map((json) => Valve.fromJson(json)).toList();
+      }
+      //If list of valves is empty
+      return [];
+   }
 }
 
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lui_project/common/styles.dart';
-
+import 'package:lui_project/common/systemVars.dart';
 class HomeScreen extends StatefulWidget {
   @override
   HomeScreenState createState() => HomeScreenState();
@@ -9,7 +9,7 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen>
 {
-
+bool testVal = false;
 
   Widget build(BuildContext context)
   {
@@ -31,7 +31,9 @@ class HomeScreenState extends State<HomeScreen>
             [SizedBox(height: currentHeight * 0.30),
             Text('Welcome to LUI!', style: LuiTextTheme.luiH1,),
               SizedBox(height: currentHeight * 0.05), // Adds spacing between widgets
-              const Text(''),]
+              Text('Click the button below to begin setup', style: LuiTextTheme.luiT1,),
+            SizedBox(height: currentHeight * 0.03),
+            ElevatedButton(onPressed:(){ setState(() { testVal = true;});}, child: Text('Press Me', style: LuiTextTheme.luiT1)),]
       ),
 
       )
