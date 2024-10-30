@@ -6,7 +6,8 @@ class SystemInfoHandler
 {
    static const setupComplete = 'setupComp';
    static const deviceID = "deviceID";
-
+   static const screenWidth = 0;
+   static const screenHeight = 0;
    static SharedPreferences? dataSaved;
 
    static final SystemInfoHandler instance = SystemInfoHandler._internal();
@@ -55,6 +56,10 @@ class SystemInfoHandler
       await dataSaved?.remove(deviceID);
    }
 
+   /*static Future<void> saveScreenSize(int screenHeight, int screenWidth) async
+   {
+      await dataSaved?.setInt(screenHeight,screenHeight);
+   }*/
 
 
    Future<void> saveValves(List<Valve> valves) async

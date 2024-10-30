@@ -75,7 +75,13 @@ Future<void> deviceSetup() async
 
   Widget AvailableDevices(BuildContext context)
   {
-  return Container();
+    double currentHeight = MediaQuery.of(context).size.height;
+    double currentWidth = MediaQuery.of(context).size.width;
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+
+
+  );
   }
   }
 
