@@ -8,6 +8,7 @@ class SystemInfoHandler
    static const deviceID = "deviceID";
    static const screenWidth = 0;
    static const screenHeight = 0;
+   static const String valves = 'valves';
    static SharedPreferences? dataSaved;
 
    static final SystemInfoHandler instance = SystemInfoHandler._internal();
@@ -62,23 +63,34 @@ class SystemInfoHandler
    }*/
 
 
-   Future<void> saveValves(List<Valve> valves) async
+
+   Future<void> saveValves(List<Valve> valvesIn) async
    {
       final prefs = await SharedPreferences.getInstance();
 
       // Convert the List<Valve> to a List<Map> and then to a JSON String.
-      String jsonString = jsonEncode(valves.map((valve) => valve.toJson()).toList());
+      String jsonString = jsonEncode(valvesIn.map((valve) => valve.toJson()).toList());
 
       // Save the JSON string to SharedPreferences.
-      await prefs.setString('valves', jsonString);
+      await prefs.setString(valves, jsonString);
    }
+
+   // Add a new item to the list and save it
+   Future<void> addItem(Valve newValve) async
+   {
+      List<Valve> valves = await getValves(); // Load the current list
+      valves.add(newValve); // Add the new item
+      await saveValves(valves); // Save the updated list back to SharedPreferences
+   }
+
+
 
    Future<List<Valve>> getValves() async
    {
       final prefs = await SharedPreferences.getInstance();
 
       // Get the JSON string from SharedPreferences.
-      String? jsonString = prefs.getString('users');
+      String? jsonString = prefs.getString(valves);
 
       if (jsonString != null)
       {
@@ -91,17 +103,26 @@ class SystemInfoHandler
       //If list of valves is empty
       return [];
    }
+
+
+   // Clear the stored list
+   Future<void> clearValves() async
+   {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(valves);
+   }
 }
 
 
 
 class Valve
 {
+   int valveID;
    int time ;
    int waterAmount;
 
    //
-   Valve({required this.time, required this.waterAmount});
+   Valve({required this.valveID, required this.time, required this.waterAmount});
 
    // Convert a valve object to a Map (for JSON encoding).
    Map<String, dynamic> toJson() => {
@@ -113,6 +134,7 @@ class Valve
    factory Valve.fromJson(Map<String, dynamic> json)
    {
       return Valve(
+         valveID: json['valveID'],
          time: json['time'],
          waterAmount: json['waterAmount'],
       );
