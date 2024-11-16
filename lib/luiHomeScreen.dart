@@ -116,8 +116,10 @@ class HomeScreenState extends State<HomeScreen> {
                   StreamBuilder<List<ScanResult>>(
                       stream: controller.scanResults,
                       builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Expanded(
+                        if (snapshot.data?.isNotEmpty ?? false)
+                        {
+                          return Flexible(
+                              fit: FlexFit.tight,
                             child: ListView.builder(
                                 shrinkWrap: true,
                                 itemCount: snapshot.data!.length,
@@ -139,7 +141,8 @@ class HomeScreenState extends State<HomeScreen> {
                         }
                       }),
                   SizedBox(height: 10,),
-                  ElevatedButton(onPressed: ()  async {
+                  ElevatedButton(onPressed: ()
+                  {
                     controller.scanDevices();
                     // await controller.disconnectDevice();
                   }, child: Text("SCAN")),
