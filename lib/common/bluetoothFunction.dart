@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:lui_project/common/systemVars.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get.dart';
 
@@ -36,7 +37,7 @@ class BleController extends GetxController
              print("No devices found");
            } else {
              for (ScanResult result in results) {
-               print("Found device: ${result.device.name} - ${result.device.id}");
+               print("Found device: ${result.device.advName} - ${result.device.remoteId}");
              }
            }
          });
@@ -47,14 +48,30 @@ class BleController extends GetxController
     }
   }
 // This function will help user to connect to BLE devices.
-  Future<void> connectToDevice(BluetoothDevice device)async
+  Future<void> connectToDevice(BluetoothDevice device, BuildContext context)async
   {
     await device.connect(timeout: Duration(seconds: 15));
     device.connectionState.listen((isConnected)
     {
        if(isConnected == BluetoothConnectionState.connected)
        {
-        print("Device connected: ${device.advName}");
+         showDialog(
+           context: context,
+           builder: (BuildContext context)
+           {
+             return AlertDialog(
+               title: Text("Connected"),
+               content: Text("Device connected: ${device.advName}"),
+               actions: [
+                 TextButton(
+                   onPressed: () => Navigator.pop(context),
+                   child: Text("OK"),
+                 ),
+               ],
+             );
+           },
+         );
+         SystemInfoHandler.saveDeviceID(device.remoteId.toString());
       }
        else
        {

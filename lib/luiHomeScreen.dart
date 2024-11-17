@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -19,11 +20,78 @@ class HomeScreenState extends State<HomeScreen> {
   bool setupComplete = false; //SystemInfoHandler().isSetupComplete();
   bool deviceSetupLoad = true;
 
-  List<BluetoothDevice> devicesList = [];
+  List<BluetoothDevice> systemDevices = [];
   List<ScanResult> scanResults = [];
+  bool isScanning = false;
+  late StreamSubscription<List<ScanResult>> scanResultsSubscription;
+  late StreamSubscription<bool> isScanningSubscription;
+  @override
+  void initState() {
+    super.initState();
+
+    scanResultsSubscription = FlutterBluePlus.scanResults.listen((results) {
+      scanResults = results;
+      if (mounted) {
+        setState(() {});
+      }
+    }, onError: (e) {
+      print("wow it broke oof");
+    });
+
+    isScanningSubscription = FlutterBluePlus.isScanning.listen((state) {
+      isScanning = state;
+      if (mounted) {
+        setState(() {});
+      }
+    });
+  }
 
   @override
-  Widget build(BuildContext context) {
+  void dispose() {
+    scanResultsSubscription.cancel();
+    isScanningSubscription.cancel();
+    super.dispose();
+  }
+  Future onScanPressed() async {
+    try {
+      // `withServices` is required on iOS for privacy purposes, ignored on android.
+      var withServices = [Guid("180f")]; // Battery Level Service
+      systemDevices = await FlutterBluePlus.systemDevices(withServices);
+    } catch (e) {
+      print(e);
+    }
+    try {
+      await FlutterBluePlus.startScan(timeout: const Duration(seconds: 15));
+    } catch (e) {
+      print(e);
+    }
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  Future onStopPressed() async {
+    try {
+      FlutterBluePlus.stopScan();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future onRefresh() {
+    if (isScanning == false) {
+      FlutterBluePlus.startScan(timeout: const Duration(seconds: 15));
+    }
+    if (mounted) {
+      setState(() {});
+    }
+    return Future.delayed(Duration(milliseconds: 500));
+  }
+
+
+  @override
+  Widget build(BuildContext context)
+  {
     double currentHeight = MediaQuery
         .of(context)
         .size
@@ -35,13 +103,14 @@ class HomeScreenState extends State<HomeScreen> {
     return Scaffold
       (
         appBar: AppBar(
+          toolbarHeight: currentHeight *0.1,
           title: Text('Lush Universal Irrigater', style: LuiTextTheme.luiH1),
           backgroundColor: Colors.cyan[300]
           ,
         ),
         body: Container(
-          width: double.infinity,
-          height: double.infinity,
+          width: currentWidth,
+          height: currentHeight,
           child: (setupComplete) ? valveSetupLoading(context) : initialSetup(
               context),
 
@@ -51,7 +120,6 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   Widget initialSetup(BuildContext context) {
-
     double currentHeight = MediaQuery
         .of(context)
         .size
@@ -131,7 +199,11 @@ class HomeScreenState extends State<HomeScreen> {
                                       title: Text(data.device.advName),
                                       subtitle: Text(data.device.remoteId.toString()),
                                       trailing: Text(data.rssi.toString()),
-                                      onTap: ()=> controller.connectToDevice(data.device),
+                                      onTap: ()=> {
+                                        controller.connectToDevice(data.device, context)
+
+                                      }
+
                                     ),
                                   );
                                 }),
@@ -143,7 +215,7 @@ class HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: 10,),
                   ElevatedButton(onPressed: ()
                   {
-                    controller.scanDevices();
+                    onScanPressed();
                     // await controller.disconnectDevice();
                   }, child: Text("SCAN")),
                 ],
