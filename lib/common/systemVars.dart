@@ -90,7 +90,7 @@ class SystemInfoHandler
       final prefs = await SharedPreferences.getInstance();
 
       // Get the JSON string from SharedPreferences.
-      String? jsonString = prefs.getString(valves);
+      String? jsonString = prefs.getString("valves_list");
 
       if (jsonString != null)
       {
@@ -109,7 +109,7 @@ class SystemInfoHandler
    Future<void> clearValves() async
    {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.remove(valves);
+      await prefs.remove("valves_list");
    }
 }
 

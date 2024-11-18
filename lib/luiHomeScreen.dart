@@ -19,7 +19,8 @@ class HomeScreen extends StatefulWidget
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  bool setupComplete = false; //SystemInfoHandler().isSetupComplete();
+  bool setupComplete = false;
+  bool setupBegin = false;
   bool deviceSetupLoad = true;
 
   List<BluetoothDevice> systemDevices = [];
@@ -102,6 +103,12 @@ class HomeScreenState extends State<HomeScreen> {
         .of(context)
         .size
         .width;
+
+    /*if(setupComplete)
+      {
+        Navigator.pop(context);
+        Navigator.push(context,MaterialPageRoute(builder: (context) => ValveSettings()));
+      }*/
     return Scaffold
       (
         appBar: AppBar(
@@ -113,7 +120,7 @@ class HomeScreenState extends State<HomeScreen> {
         body: Container(
           width: currentWidth,
           height: currentHeight,
-          child: (setupComplete) ? valveSetupLoading(context) : initialSetup(
+          child: setupBegin ? AvailableDevices(context)  : initialSetup(
               context),
 
         )
@@ -146,8 +153,7 @@ class HomeScreenState extends State<HomeScreen> {
             SizedBox(height: currentHeight * 0.03),
             ElevatedButton(onPressed: () {
               setState(() {
-                setupComplete = true;
-                AvailableDevices(context);
+                setupBegin = true;
               });
             }, child: Text('Press Me', style: LuiTextTheme.luiT1)),
           ]
@@ -156,13 +162,13 @@ class HomeScreenState extends State<HomeScreen> {
 
 
 
-  Widget valveSetupLoading(BuildContext context)
+  /*Widget valveSetupLoading(BuildContext context)
   {
     return Center(
       child: AvailableDevices(
           context)
     );
-  }
+  }*/
 
   Widget AvailableDevices(BuildContext context) {
     double currentHeight = MediaQuery
@@ -203,6 +209,8 @@ class HomeScreenState extends State<HomeScreen> {
                                       trailing: Text(data.rssi.toString()),
                                       onTap: ()=> {
                                         controller.connectToDevice(data.device, context),
+                                      setupComplete = true,
+                                        SystemInfoHandler().setSetUpStatus(setupComplete),
                                         Navigator.push(context,MaterialPageRoute(builder: (context) => ValveSettings()))
                                       }
 

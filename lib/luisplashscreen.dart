@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
+import 'package:lui_project/ValveSettings.dart';
+import 'package:lui_project/common/systemVars.dart';
 import '/common/styles.dart';
 import 'package:flutter/services.dart';
 import 'package:lui_project/luiHomeScreen.dart';
@@ -12,16 +14,26 @@ class luiSplashScreen extends StatefulWidget {
 
 class _luiSplashScreenState extends State<luiSplashScreen> with SingleTickerProviderStateMixin
 {
+  bool setupComplete = SystemInfoHandler().deviceSetupComplete();
+
   @override
 
   void initState()
   {
+    //SystemInfoHandler().setSetUpStatus(false);
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
 
     Future.delayed(Duration(seconds: 2),()
     {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen(),));
+      if(setupComplete)
+        {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => ValveSettings(),));
+        }
+      else {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => HomeScreen(),));
+      }
     });
   }
 
