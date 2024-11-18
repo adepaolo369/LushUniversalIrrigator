@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
+import 'package:get/get.dart';
+import 'package:get/get_common/get_reset.dart';
 import '/common/styles.dart';
 import 'package:flutter/services.dart';
 import 'package:lui_project/luiHomeScreen.dart';
@@ -116,11 +118,12 @@ class ValveSettingsState extends State<ValveSettings> {
 
                 // Add the new valve item to the list
                 setState(() {
-                  valveList.add(Valve(
+                  Valve currentValve = Valve(
                     valveID: valveList.length + 1, // Incremental ID
                     time: time,
-                    waterAmount: waterAmount,
-                  ));
+                    waterAmount: waterAmount);
+                  valveList.add(currentValve);
+                  SystemInfoHandler().addValve(currentValve);
                 });
 
                 Navigator.of(context).pop(); // Close dialog
@@ -140,6 +143,10 @@ class ValveSettingsState extends State<ValveSettings> {
 
 Future<void> valveLoad() async {
   valveList = await SystemInfoHandler().getValves();
+  if(valveList.isEmpty)
+    {
+      valveList=[];
+    }
   return;
 }
 

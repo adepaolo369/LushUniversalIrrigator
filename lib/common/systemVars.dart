@@ -8,7 +8,7 @@ class SystemInfoHandler
    static const deviceID = "deviceID";
    static const screenWidth = 0;
    static const screenHeight = 0;
-   static const String valves = 'valves';
+   static List<String> valves = [];
    static SharedPreferences? dataSaved;
 
    static final SystemInfoHandler instance = SystemInfoHandler._internal();
@@ -69,14 +69,14 @@ class SystemInfoHandler
       final prefs = await SharedPreferences.getInstance();
 
       // Convert the List<Valve> to a List<Map> and then to a JSON String.
-      String jsonString = jsonEncode(valvesIn.map((valve) => valve.toJson()).toList());
+      List<String> valveStringList = valvesIn.map((valve) => jsonEncode(valve.toJson())).toList();
 
       // Save the JSON string to SharedPreferences.
-      await prefs.setString(valves, jsonString);
+      await prefs.setStringList("valves_list", valveStringList);
    }
 
    // Add a new item to the list and save it
-   Future<void> addItem(Valve newValve) async
+   Future<void> addValve(Valve newValve) async
    {
       List<Valve> valves = await getValves(); // Load the current list
       valves.add(newValve); // Add the new item

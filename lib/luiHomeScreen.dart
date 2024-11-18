@@ -9,6 +9,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:lui_project/common/bluetoothFunction.dart';
 import 'package:get/get.dart';
 
+import 'ValveSettings.dart';
+
 class HomeScreen extends StatefulWidget
 {
   @override
@@ -200,8 +202,8 @@ class HomeScreenState extends State<HomeScreen> {
                                       subtitle: Text(data.device.remoteId.toString()),
                                       trailing: Text(data.rssi.toString()),
                                       onTap: ()=> {
-                                        controller.connectToDevice(data.device, context)
-
+                                        controller.connectToDevice(data.device, context),
+                                        Navigator.push(context,MaterialPageRoute(builder: (context) => ValveSettings()))
                                       }
 
                                     ),
