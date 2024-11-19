@@ -6,6 +6,7 @@ import 'package:lui_project/luisplashscreen.dart';
 import 'package:lui_project/common/systemVars.dart';
 import 'luiHomeScreen.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:lui_project/allValvesPage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

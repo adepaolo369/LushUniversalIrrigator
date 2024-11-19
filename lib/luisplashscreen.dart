@@ -5,6 +5,7 @@ import 'package:lui_project/common/systemVars.dart';
 import '/common/styles.dart';
 import 'package:flutter/services.dart';
 import 'package:lui_project/luiHomeScreen.dart';
+import 'package:lui_project/allValvesPage.dart';
 class luiSplashScreen extends StatefulWidget {
   const luiSplashScreen({super.key});
 

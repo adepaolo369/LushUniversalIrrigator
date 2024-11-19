@@ -5,10 +5,13 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:lui_project/common/systemVars.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get.dart';
+import 'package:lui_project/common/Global.dart';
+
 
 
 class BleController extends GetxController
 {
+
   Future<void> requestPermissions() async {
     await Permission.bluetoothScan.request();
     await Permission.bluetoothConnect.request();
@@ -78,6 +81,16 @@ class BleController extends GetxController
         print("Device Disconnected");
       }
     });
+    await discover(device);
   }
     Stream<List<ScanResult>> get scanResults => FlutterBluePlus.scanResults;
 }
+
+Future<void> discover(BluetoothDevice device) async {
+  servicesGlobal = await device.discoverServices();
+  for (BluetoothService service in servicesGlobal) {
+    characteristicsGlobal = service.characteristics;
+  }
+}
+
+
