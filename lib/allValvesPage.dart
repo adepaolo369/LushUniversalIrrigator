@@ -315,7 +315,7 @@ class ValveInputState extends State<ValveInput> {
                           targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1252';
                           break;
                         case 2:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1252';
+                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1253';
                           break;
                         case 3:
                           targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1254';

@@ -162,13 +162,7 @@ class HomeScreenState extends State<HomeScreen> {
 
 
 
-  /*Widget valveSetupLoading(BuildContext context)
-  {
-    return Center(
-      child: AvailableDevices(
-          context)
-    );
-  }*/
+
 
   Widget AvailableDevices(BuildContext context) {
     double currentHeight = MediaQuery

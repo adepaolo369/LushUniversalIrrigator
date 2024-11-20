@@ -9,7 +9,7 @@ import 'package:lui_project/luiHomeScreen.dart';
 import 'package:lui_project/common/systemVars.dart';
 import 'package:lui_project/common/bluetoothFunction.dart';
 import 'package:lui_project/common/Global.dart';
-
+import 'package:lui_project/allValvesPage.dart';
 List<Valve> valveList = [];
 final TextEditingController timeController = TextEditingController();
 final TextEditingController waterAmountController = TextEditingController();
@@ -39,7 +39,7 @@ class ValveSettingsState extends State<ValveSettings> {
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
                   onTap: () {
-                    // Define what should happen on tap
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => ValveInput()));
                   },
                   child: Container(
                     padding: EdgeInsets.all(16.0),
@@ -48,7 +48,7 @@ class ValveSettingsState extends State<ValveSettings> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Text(
-                      "Time: ${valveList[index].time}, Water Amount: ${valveList[index].waterAmount}",
+                      "Valve: ${valveList[index].valveID}, Water Amount: ${valveList[index].waterAmount}",
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
@@ -94,11 +94,6 @@ class ValveSettingsState extends State<ValveSettings> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                controller: timeController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: "Time"),
-              ),
-              TextField(
                 controller: waterAmountController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(labelText: "Water Amount"),
@@ -114,15 +109,13 @@ class ValveSettingsState extends State<ValveSettings> {
             ),
             TextButton(
               onPressed: () {
-                int time = int.tryParse(timeController.text) ?? 0;
                 int waterAmount = int.tryParse(waterAmountController.text) ?? 0;
 
                 // Add the new valve item to the list
                 setState(() {
                   Valve currentValve = Valve(
                     valveID: valveList.length + 1, // Incremental ID
-                    time: time,
-                    waterAmount: waterAmount);
+                    waterAmount: waterAmount, inUse: true);
                   valveList.add(currentValve);
                   SystemInfoHandler().addValve(currentValve);
                 });
@@ -142,16 +135,12 @@ class ValveSettingsState extends State<ValveSettings> {
   }
 }
 
-Future<void> valveLoad() async {
-  valveList = await SystemInfoHandler().getValves();
+void valveLoad()
+{
+  valveList =  SystemInfoHandler().getValves();
   if(valveList.isEmpty)
     {
       valveList=[];
     }
-  return;
-}
-
-void testButton() {
-  SystemNavigator.pop();
   return;
 }

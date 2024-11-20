@@ -54,7 +54,30 @@ class BleController extends GetxController
 // This function will help user to connect to BLE devices.
   Future<void> connectToDevice(BluetoothDevice device, BuildContext context)async
   {
-    await device.connect(timeout: Duration(seconds: 15));
+    try {
+      await device.connect(timeout: Duration(seconds: 15));
+    }
+    catch(e)
+    {
+      showDialog(
+        context: context,
+        builder: (BuildContext context)
+        {
+          return AlertDialog(
+            title: Text("ERROR - Device Failed to Connect"),
+            content: Text("Device ${device.advName} failed to connect - Error 001"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+
+      return;
+    }
     device.connectionState.listen((isConnected)
     {
        if(isConnected == BluetoothConnectionState.connected)
@@ -75,7 +98,7 @@ class BleController extends GetxController
              );
            },
          );
-         SystemInfoHandler.saveDeviceID(device.remoteId.toString());
+         SystemInfoHandler().saveDeviceID(device.remoteId.toString());
       }
        else
        {

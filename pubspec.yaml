@@ -41,7 +41,7 @@ dependencies:
   flutter_font_icons: ^2.2.7
   flutter_displaymode: ^0.6.0
   shared_preferences: ^2.3.2
-  flutter_blue_plus: ^1.33.5
+  flutter_blue_plus: ^1.34.5
   permission_handler: ^11.3.1
   get: ^4.6.6
 
