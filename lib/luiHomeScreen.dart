@@ -53,6 +53,8 @@ class HomeScreenState extends State<HomeScreen> {
   void dispose() {
     scanResultsSubscription.cancel();
     isScanningSubscription.cancel();
+    setupComplete = false;
+    SystemInfoHandler().setSetUpStatus(setupComplete);
     super.dispose();
   }
   Future onScanPressed() async {
@@ -162,13 +164,7 @@ class HomeScreenState extends State<HomeScreen> {
 
 
 
-  /*Widget valveSetupLoading(BuildContext context)
-  {
-    return Center(
-      child: AvailableDevices(
-          context)
-    );
-  }*/
+
 
   Widget AvailableDevices(BuildContext context) {
     double currentHeight = MediaQuery
@@ -208,10 +204,10 @@ class HomeScreenState extends State<HomeScreen> {
                                       subtitle: Text(data.device.remoteId.toString()),
                                       trailing: Text(data.rssi.toString()),
                                       onTap: ()=> {
-                                        controller.connectToDevice(data.device, context),
-                                      setupComplete = true,
+                                        SystemInfoHandler().saveDeviceID(data.device.remoteId.toString()),
+                                        setupComplete = true,
                                         SystemInfoHandler().setSetUpStatus(setupComplete),
-                                        Navigator.push(context,MaterialPageRoute(builder: (context) => ValveSettings()))
+                                        Navigator.push(context,MaterialPageRoute(builder: (context) => ValveSettings())),
                                       }
 
                                     ),
