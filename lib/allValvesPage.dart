@@ -325,16 +325,16 @@ class ValveInputState extends State<ValveInput> {
                           targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1254';
                           break;
                         case 4:
-                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1253';
-                          break;
-                        case 5:
-                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1254';
-                          break;
-                        case 6:
                           targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1255';
                           break;
-                        case 7:
+                        case 5:
                           targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1256';
+                          break;
+                        case 6:
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1258';
+                          break;
+                        case 7:
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1258';
                           break;
                         default:
                           targetUUID = 'defaultUUID';
