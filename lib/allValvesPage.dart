@@ -122,10 +122,13 @@ class ValveInputState extends State<ValveInput> {
                           targetUUID = 'defaultUUID';
                           break;
                       }
+
                       if(value){
+                        print("Writing value: '1' to $targetUUID");
                         writeBoolCharacteristic('1', targetUUID);
                       }
                       else{
+                        print("Writing value: '0' to $targetUUID");
                         writeBoolCharacteristic('0', targetUUID);
                       }
                     },
@@ -176,6 +179,7 @@ class ValveInputState extends State<ValveInput> {
                           targetUUID = 'defaultUUID';
                           break;
                       }
+                      print("Writing value: '1' to $targetUUID");
                       writeBoolCharacteristic('1', targetUUID);
                     },
 
@@ -336,7 +340,7 @@ class ValveInputState extends State<ValveInput> {
                           targetUUID = 'defaultUUID';
                           break;
                       }
-
+                      print("Writing value: '1' to $targetUUID");
                       writeBoolCharacteristic('1', targetUUID);
                     },
                     style: ElevatedButton.styleFrom(
@@ -417,6 +421,7 @@ class ValveInputState extends State<ValveInput> {
                                 targetUUID = 'defaultUUID';
                                 break;
                             }
+                            print("Writing value: $value to $targetUUID");
                             writeIntCharacteristic(value, targetUUID);
                           }
                         }
