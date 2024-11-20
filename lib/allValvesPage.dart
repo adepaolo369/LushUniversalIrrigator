@@ -122,10 +122,13 @@ class ValveInputState extends State<ValveInput> {
                           targetUUID = 'defaultUUID';
                           break;
                       }
+
                       if(value){
+                        print("Writing value: $value to $targetUUID");
                         writeBoolCharacteristic('1', targetUUID);
                       }
                       else{
+                        print("Writing value: $value to $targetUUID");
                         writeBoolCharacteristic('0', targetUUID);
                       }
                     },
