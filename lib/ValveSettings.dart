@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:get/get.dart';
 import 'package:get/get_common/get_reset.dart';
@@ -23,6 +24,11 @@ class ValveSettingsState extends State<ValveSettings> {
   @override
   void initState() {
     super.initState();
+    BluetoothDevice device = BluetoothDevice.fromId(SystemInfoHandler().getDeviceID() ?? "none");
+    if(device.isDisconnected)
+    {
+      BleController().connectToDevice(device, context);
+    }
     valveLoad();
   }
 
