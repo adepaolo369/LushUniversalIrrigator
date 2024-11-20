@@ -98,25 +98,25 @@ class ValveInputState extends State<ValveInput> {
                       String targetUUID;
                       switch(valveNum){
                         case 1:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1214';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1214';
                           break;
                         case 2:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1215';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1215';
                           break;
                         case 3:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1216';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1216';
                           break;
                         case 4:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1217';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1217';
                           break;
                         case 5:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1218';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1218';
                           break;
                         case 6:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1219';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1219';
                           break;
                         case 7:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1220';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1220';
                           break;
                         default:
                           targetUUID = 'defaultUUID';
@@ -155,25 +155,25 @@ class ValveInputState extends State<ValveInput> {
                       String targetUUID;
                       switch(valveNum){
                         case 1:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1259';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1259';
                           break;
                         case 2:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1260';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1260';
                           break;
                         case 3:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1261';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1261';
                           break;
                         case 4:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1262';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1262';
                           break;
                         case 5:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1263';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1263';
                           break;
                         case 6:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1264';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1264';
                           break;
                         case 7:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1265';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a12265';
                           break;
                         default:
                           targetUUID = 'defaultUUID';
@@ -265,25 +265,25 @@ class ValveInputState extends State<ValveInput> {
                           String targetUUID;
                           switch(valveNum){
                             case 1:
-                              targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1228';
+                              targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1228';
                               break;
                             case 2:
-                              targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1229';
+                              targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1229';
                               break;
                             case 3:
-                              targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1230';
+                              targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1230';
                               break;
                             case 4:
-                              targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1231';
+                              targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1231';
                               break;
                             case 5:
-                              targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1232';
+                              targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1232';
                               break;
                             case 6:
-                              targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1233';
+                              targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1233';
                               break;
                             case 7:
-                              targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1234';
+                              targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1234';
                               break;
                             default:
                               targetUUID = 'defaultUUID';
@@ -316,25 +316,25 @@ class ValveInputState extends State<ValveInput> {
                       String targetUUID;
                       switch(valveNum){
                         case 1:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1252';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1252';
                           break;
                         case 2:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1252';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1253';
                           break;
                         case 3:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1254';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1254';
                           break;
                         case 4:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1255';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1253';
                           break;
                         case 5:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1256';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1254';
                           break;
                         case 6:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1257';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1255';
                           break;
                         case 7:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1258';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1256';
                           break;
                         default:
                           targetUUID = 'defaultUUID';
@@ -390,32 +390,25 @@ class ValveInputState extends State<ValveInput> {
                             String targetUUID;
                             switch (valveNum) {
                               case 1:
-                                targetUUID =
-                                '19B10001-E8F2-537E-4F6C-D104768A1266';
+                                targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1266';
                                 break;
                               case 2:
-                                targetUUID =
-                                '19B10001-E8F2-537E-4F6C-D104768A1267';
+                                targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1267';
                                 break;
                               case 3:
-                                targetUUID =
-                                '19B10001-E8F2-537E-4F6C-D104768A1268';
+                                targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1268';
                                 break;
                               case 4:
-                                targetUUID =
-                                '19B10001-E8F2-537E-4F6C-D104768A1269';
+                                targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1269';
                                 break;
                               case 5:
-                                targetUUID =
-                                '19B10001-E8F2-537E-4F6C-D104768A1270';
+                                targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1270';
                                 break;
                               case 6:
-                                targetUUID =
-                                '19B10001-E8F2-537E-4F6C-D104768A1271';
+                                targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1271';
                                 break;
                               case 7:
-                                targetUUID =
-                                '19B10001-E8F2-537E-4F6C-D104768A1272';
+                                targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1272';
                                 break;
                               default:
                                 targetUUID = 'defaultUUID';
