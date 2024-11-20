@@ -66,7 +66,7 @@ class HomeScreenState extends State<HomeScreen> {
       print(e);
     }
     try {
-      await FlutterBluePlus.startScan(timeout: const Duration(seconds: 15));
+      await FlutterBluePlus.startScan(timeout: const Duration(seconds: 15), withNames: ["Valve Control"]);
     } catch (e) {
       print(e);
     }

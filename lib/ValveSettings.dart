@@ -54,7 +54,7 @@ class ValveSettingsState extends State<ValveSettings> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Text(
-                      "Valve: ${valveList[index].valveID}, Water Amount: ${valveList[index].waterAmount}",
+                      "Valve: ${valveList[index].valveID}, Water Amount: ${valveList[index].waterAmountAutomatic}",
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
@@ -121,7 +121,7 @@ class ValveSettingsState extends State<ValveSettings> {
                 setState(() {
                   Valve currentValve = Valve(
                     valveID: valveList.length + 1, // Incremental ID
-                    waterAmount: waterAmount, inUse: true);
+                    waterAmountAutomatic: waterAmount, waterAmountManual: 0, actualWaterAmount: 0, inUse: true);
                   valveList.add(currentValve);
                   SystemInfoHandler().addValve(currentValve);
                 });

@@ -113,17 +113,21 @@ class SystemInfoHandler
 class Valve
 {
    int valveID;
-   int waterAmount;
+   int waterAmountManual;
+   int waterAmountAutomatic;
+   int actualWaterAmount;
    bool inUse = true;
 
 
    //
-   Valve({required this.valveID,required this.waterAmount, required this.inUse});
+   Valve({required this.valveID,required this.waterAmountManual,required this.waterAmountAutomatic, required this.actualWaterAmount, required this.inUse});
 
    // Convert a valve object to a Map (for JSON encoding).
    Map<String, dynamic> toJson() => {
       'valveID' : valveID,
-      'waterAmount': waterAmount,
+      'waterAmountManual': waterAmountManual,
+      'waterAmountAutomatic': waterAmountAutomatic,
+      'actualWaterAmount' : actualWaterAmount,
       'inUse' : inUse,
    };
 
@@ -132,7 +136,9 @@ class Valve
    {
       return Valve(
          valveID: json['valveID'] ?? 0,
-         waterAmount: json['waterAmount'] ?? 0,
+         waterAmountManual: json['waterAmountManual'] ?? 0,
+         waterAmountAutomatic: json['waterAmountAutomatic'] ?? 0,
+         actualWaterAmount: json['actualWaterAmount'] ?? 0,
          inUse: json['inUse'] ?? true,
       );
    }
