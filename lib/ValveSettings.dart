@@ -11,7 +11,6 @@ import 'package:lui_project/common/systemVars.dart';
 import 'package:lui_project/common/bluetoothFunction.dart';
 import 'package:lui_project/common/Global.dart';
 import 'package:lui_project/allValvesPage.dart';
-List<Valve> valveList = [];
 final TextEditingController timeController = TextEditingController();
 final TextEditingController waterAmountController = TextEditingController();
 
@@ -39,7 +38,7 @@ class ValveSettingsState extends State<ValveSettings> {
         // Expanded ListView to display valve items
         Expanded(
           child: ListView.builder(
-            itemCount: valveList.length,
+            itemCount: globalLocalList.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -54,7 +53,7 @@ class ValveSettingsState extends State<ValveSettings> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Text(
-                      "Valve: ${valveList[index].valveID}, Water Amount: ${valveList[index].waterAmountAutomatic}",
+                      "Valve: ${globalLocalList[index].valveID}, Water Amount: ${globalLocalList[index].waterAmountAutomatic}",
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
@@ -120,9 +119,9 @@ class ValveSettingsState extends State<ValveSettings> {
                 // Add the new valve item to the list
                 setState(() {
                   Valve currentValve = Valve(
-                    valveID: valveList.length + 1, // Incremental ID
+                    valveID: globalLocalList.length + 1, // Incremental ID
                     waterAmountAutomatic: waterAmount, waterAmountManual: 0, actualWaterAmount: 0, inUse: true);
-                  valveList.add(currentValve);
+                  globalLocalList.add(currentValve);
                   SystemInfoHandler().addValve(currentValve);
                 });
 
@@ -143,10 +142,10 @@ class ValveSettingsState extends State<ValveSettings> {
 
 void valveLoad()
 {
-  valveList =  SystemInfoHandler().getValves();
-  if(valveList.isEmpty)
+  globalLocalList =  SystemInfoHandler().getValves();
+  if(globalLocalList.isEmpty)
     {
-      valveList=[];
+      globalLocalList=[];
     }
   return;
 }
