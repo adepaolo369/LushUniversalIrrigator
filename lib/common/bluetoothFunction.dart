@@ -6,6 +6,7 @@ import 'package:lui_project/common/systemVars.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get.dart';
 import 'package:lui_project/common/Global.dart';
+import 'dart:convert';
 
 
 
@@ -88,8 +89,46 @@ class BleController extends GetxController
 
 Future<void> discover(BluetoothDevice device) async {
   servicesGlobal = await device.discoverServices();
-  for (BluetoothService service in servicesGlobal) {
-    characteristicsGlobal = service.characteristics;
+}
+
+Future<void> writeIntCharacteristic(String value, String uuid) async {
+  try{
+    int intValue = int.parse(value);
+    List<int> byteValue = [
+      (intValue & 0xFF), // Lower byte (least significant)
+      (intValue >> 8 & 0xFF), // Upper byte (most significant)
+    ];
+
+    for (BluetoothService service in servicesGlobal) {
+      for (BluetoothCharacteristic characteristic in service.characteristics) {
+        if (characteristic.uuid.toString() == uuid) {
+          //write to characteristic
+          await characteristic.write(byteValue);
+          return;
+        }
+      }
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+
+Future<void> writeBoolCharacteristic(String value, String uuid) async {
+  try{
+    int intValue = int.parse(value);
+    List<int> byteValue = [(intValue & 0xFF)];
+
+    for (BluetoothService service in servicesGlobal) {
+      for (BluetoothCharacteristic characteristic in service.characteristics) {
+        if (characteristic.uuid.toString() == uuid) {
+          //write to characteristic
+          await characteristic.write(byteValue);
+          return;
+        }
+      }
+    }
+  } catch (e) {
+    print(e);
   }
 }
 
