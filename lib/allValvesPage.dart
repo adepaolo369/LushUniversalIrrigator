@@ -464,6 +464,8 @@ class ValveInputState extends State<ValveInput> {
     if (newValue != lastReceivedValue) { // Only update if value has changed
       setState(() {
         lastReceivedValue = newValue;
+        //print("Updating remaining milliliters value: $value");
+        print("Updating remaining milliliters newValue: $newValue");
         volumeTrackController.text = newValue; // Update the TextField
       });
     }
