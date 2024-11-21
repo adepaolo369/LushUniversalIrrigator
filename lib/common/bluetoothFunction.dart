@@ -6,8 +6,7 @@ import 'package:lui_project/common/systemVars.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get.dart';
 import 'package:lui_project/common/Global.dart';
-import 'dart:convert';
-
+import 'package:lui_project/allValvesPage.dart';
 
 
 class BleController extends GetxController
@@ -108,125 +107,117 @@ class BleController extends GetxController
     await discover(device);
   }
     Stream<List<ScanResult>> get scanResults => FlutterBluePlus.scanResults;
-}
-
-Future<void> discover(BluetoothDevice device) async {
-  servicesGlobal = await device.discoverServices();
-}
-
-/*Future<void> writeIntCharacteristic(String value, String uuid) async {
-  try{
-    int intValue = int.parse(value);
-    List<int> byteValue = [
-      (intValue & 0xFF), // Lower byte (least significant)
-      (intValue >> 8 & 0xFF), // Upper byte (most significant)
-    ];
-
-    for (BluetoothService service in servicesGlobal) {
-      for (BluetoothCharacteristic characteristic in service.characteristics) {
-        if (characteristic.uuid.toString() == uuid) {
-          //write to characteristic
-          await characteristic.write(byteValue);
-          return;
-        }
-      }
-    }
-  } catch (e) {
-    print(e);
+  Future<void> discover(BluetoothDevice device) async {
+    servicesGlobal = await device.discoverServices();
   }
-} */
 
-Future<void> writeIntCharacteristic(String value, String uuid) async {
-  try {
-    int intValue = int.parse(value);
-    print("int intValue: $intValue");
-    List<int> byteValue = [
-      (intValue & 0xFF), // Lower byte (least significant)
-      (intValue >> 8 & 0xFF), // Upper byte (most significant)
-    ];
+  Future<void> writeIntCharacteristic(String value, String uuid) async {
+    try {
+      int intValue = int.parse(value);
+      print("int intValue: $intValue");
+      List<int> byteValue = [
+        (intValue & 0xFF),
+        (intValue >> 8 & 0xFF),
+      ];
 
-    print("int bytleValue: $byteValue");
+      print("int bytleValue: $byteValue");
 
-    bool characteristicWritten = false;
+      bool characteristicWritten = false;
 
-    for (BluetoothService service in servicesGlobal) {
-      for (BluetoothCharacteristic characteristic in service.characteristics) {
-        if (characteristic.uuid.toString() == uuid) {
-          // Check if the characteristic is writable
-          if (characteristic.properties.write) {
-            print("Writing to characteristic with UUID: $uuid");
-            await characteristic.write(byteValue);
-            characteristicWritten = true;
-            break;
-          } else {
-            print("Characteristic with UUID $uuid is not writable.");
+      for (BluetoothService service in servicesGlobal) {
+        for (BluetoothCharacteristic characteristic in service.characteristics) {
+          if (characteristic.uuid.toString() == uuid) {
+            // Check if the characteristic is writable
+            if (characteristic.properties.write) {
+              print("Writing to characteristic with UUID: $uuid");
+              await characteristic.write(byteValue);
+              characteristicWritten = true;
+              break;
+            } else {
+              print("Characteristic with UUID $uuid is not writable.");
+            }
           }
         }
+        if (characteristicWritten) break;
       }
-      if (characteristicWritten) break;  // Stop searching once we find the characteristic
-    }
 
-    if (!characteristicWritten) {
-      print("No writable characteristic found with UUID: $uuid");
-    }
-  } catch (e) {
-    print("Error writing characteristic: $e");
-  }
-}
-
-/*Future<void> writeBoolCharacteristic(String value, String uuid) async {
-  try{
-    int intValue = int.parse(value);
-    List<int> byteValue = [(intValue & 0xFF)];
-
-    for (BluetoothService service in servicesGlobal) {
-      for (BluetoothCharacteristic characteristic in service.characteristics) {
-        if (characteristic.uuid.toString() == uuid) {
-          //write to characteristic
-          print("Writing to characteristic UUID: ${characteristic.uuid}");
-          await characteristic.write(byteValue);
-          return;
-        }
+      if (!characteristicWritten) {
+        print("No writable characteristic found with UUID: $uuid");
       }
+    } catch (e) {
+      print("Error writing characteristic: $e");
     }
-  } catch (e) {
-    print(e);
   }
-}*/
 
-Future<void> writeBoolCharacteristic(String value, String uuid) async {
-  try {
-    int intValue = int.parse(value);
-    print("bool intValue: $intValue");
-    List<int> byteValue = [(intValue & 0xFF)];
+  Future<void> writeBoolCharacteristic(String value, String uuid) async {
+    try {
+      int intValue = int.parse(value);
+      print("bool intValue: $intValue");
+      List<int> byteValue = [(intValue & 0xFF)];
 
-    print("bytleValue: $byteValue");
+      print("bytleValue: $byteValue");
 
-    bool characteristicWritten = false;
+      bool characteristicWritten = false;
 
-    for (BluetoothService service in servicesGlobal) {
-      for (BluetoothCharacteristic characteristic in service.characteristics) {
-        if (characteristic.uuid.toString() == uuid) {
-          // Check if the characteristic is writable
-          if (characteristic.properties.write) {
-            print("Writing to characteristic with UUID: $uuid");
-            await characteristic.write(byteValue);
-            characteristicWritten = true;
-            break;
-          } else {
-            print("Characteristic with UUID $uuid is not writable.");
+      for (BluetoothService service in servicesGlobal) {
+        for (BluetoothCharacteristic characteristic in service.characteristics) {
+          if (characteristic.uuid.toString() == uuid) {
+            // Check if the characteristic is writable
+            if (characteristic.properties.write) {
+              print("Writing to characteristic with UUID: $uuid");
+              await characteristic.write(byteValue);
+              characteristicWritten = true;
+              break;
+            } else {
+              print("Characteristic with UUID $uuid is not writable.");
+            }
           }
         }
+        if (characteristicWritten) break;
       }
-      if (characteristicWritten) break;  // Stop searching once we find the characteristic
-    }
 
-    if (!characteristicWritten) {
-      print("No writable characteristic found with UUID: $uuid");
+      if (!characteristicWritten) {
+        print("No writable characteristic found with UUID: $uuid");
+      }
+    } catch (e) {
+      print("Error writing characteristic: $e");
     }
-  } catch (e) {
-    print("Error writing characteristic: $e");
+  }
+
+  Future<void> subscribeToCharacteristic(String uuid, Function(String) onValueChanged) async {
+    try {
+      bool characteristicSubscribed = false;
+
+      for (BluetoothService service in servicesGlobal) {
+        for (BluetoothCharacteristic characteristic in service.characteristics) {
+          if (characteristic.uuid.toString() == uuid) {
+            // Check if the characteristic is notifiable
+            if (characteristic.properties.notify) {
+              print("Writing to characteristic with UUID: $uuid");
+              await characteristic.setNotifyValue(true);
+              characteristic.lastValueStream.listen((value) {
+                final newValue = String.fromCharCodes(value);
+                onValueChanged(newValue);
+              });
+              characteristicSubscribed = true;
+              break;
+            } else {
+              print("Characteristic with UUID $uuid is not notifiable.");
+            }
+          }
+        }
+        if (characteristicSubscribed) break;
+      }
+
+      if (!characteristicSubscribed) {
+        print("No notifiable characteristic found with UUID: $uuid");
+      }
+    } catch (e) {
+      print("Error subscribing to characteristic: $e");
+    }
   }
 }
+
+
 
 

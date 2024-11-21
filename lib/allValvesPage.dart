@@ -21,16 +21,20 @@ class ValveInput extends StatefulWidget {
 }
 
 class ValveInputState extends State<ValveInput> {
+
   @override
   void initState() {
     super.initState();
     valveLoad();
+    subscribeToVolTrackingCharacteristic();
   }
+
 
   bool activeToggle = true;
   bool refilled = false;
   bool manualWater = false;
   int valveNum = 1;
+  String lastReceivedValue = "";
 
   @override
   Widget build(BuildContext context) {
@@ -125,11 +129,11 @@ class ValveInputState extends State<ValveInput> {
 
                       if(value){
                         print("Writing value: '1' to $targetUUID");
-                        writeBoolCharacteristic('1', targetUUID);
+                        BleController().writeBoolCharacteristic('1', targetUUID);
                       }
                       else{
                         print("Writing value: '0' to $targetUUID");
-                        writeBoolCharacteristic('0', targetUUID);
+                        BleController().writeBoolCharacteristic('0', targetUUID);
                       }
                     },
                   ), //
@@ -180,7 +184,7 @@ class ValveInputState extends State<ValveInput> {
                           break;
                       }
                       print("Writing value: '1' to $targetUUID");
-                      writeBoolCharacteristic('1', targetUUID);
+                      BleController().writeBoolCharacteristic('1', targetUUID);
                     },
 
                     style: ElevatedButton.styleFrom(
@@ -217,10 +221,8 @@ class ValveInputState extends State<ValveInput> {
                     width: 125,
                     child: TextField(
                       controller: volumeTrackController,
-                      keyboardType: TextInputType.numberWithOptions(decimal: false),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
-                      ],
+                      readOnly: true,
+                      keyboardType: TextInputType.numberWithOptions(decimal: false,signed: false),
                       decoration: InputDecoration(
                         labelText: "Milliliters",
                         labelStyle: TextStyle(fontSize: 18, color: Colors.black),
@@ -289,7 +291,7 @@ class ValveInputState extends State<ValveInput> {
                               targetUUID = 'defaultUUID';
                               break;
                           }
-                          writeIntCharacteristic(value, targetUUID);
+                          BleController().writeIntCharacteristic(value, targetUUID);
                         }
                       },
                     ),
@@ -341,7 +343,7 @@ class ValveInputState extends State<ValveInput> {
                           break;
                       }
                       print("Writing value: '1' to $targetUUID");
-                      writeBoolCharacteristic('1', targetUUID);
+                      BleController().writeBoolCharacteristic('1', targetUUID);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
@@ -415,7 +417,7 @@ class ValveInputState extends State<ValveInput> {
                                 break;
                             }
                             print("Writing value: $value to $targetUUID");
-                            writeIntCharacteristic(value, targetUUID);
+                            BleController().writeIntCharacteristic(value, targetUUID);
                           }
                         }
                     ),
@@ -428,4 +430,43 @@ class ValveInputState extends State<ValveInput> {
       ),
     );
   }
+  void subscribeToVolTrackingCharacteristic() {
+      String targetUUID;
+      switch (valveNum) {
+        case 1:
+          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1235';
+          break;
+        case 2:
+          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1236';
+          break;
+        case 3:
+          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1237';
+          break;
+        case 4:
+          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1238';
+          break;
+        case 5:
+          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1239';
+          break;
+        case 6:
+          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1240';
+          break;
+        case 7:
+          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1241';
+          break;
+        default:
+          targetUUID = 'defaultUUID';
+          break;
+      }
+      BleController().subscribeToCharacteristic(targetUUID, updateCharacteristicValue);
+  }
+  void updateCharacteristicValue(String newValue) {
+    if (newValue != lastReceivedValue) { // Only update if value has changed
+      setState(() {
+        lastReceivedValue = newValue;
+        volumeTrackController.text = newValue; // Update the TextField
+      });
+    }
+  }
 }
+
