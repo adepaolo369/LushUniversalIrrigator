@@ -196,7 +196,12 @@ class BleController extends GetxController
               print("Writing to characteristic with UUID: $uuid");
               await characteristic.setNotifyValue(true);
               characteristic.lastValueStream.listen((value) {
-                final newValue = String.fromCharCodes(value);
+                print("Updating remaining milliliters value: $value");
+                int  intValue = (value[0]) |
+                (value[1] << 8) |
+                (value[2] << 16) |
+                (value[3] << 24);
+                String newValue = intValue.toString();
                 onValueChanged(newValue);
               });
               characteristicSubscribed = true;
