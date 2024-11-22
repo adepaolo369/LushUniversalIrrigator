@@ -38,39 +38,47 @@ class ValveInputState extends State<ValveInput> {
 
   @override
   Widget build(BuildContext context) {
+      double currentHeight = MediaQuery
+          .of(context)
+          .size
+          .height;
+      double currentWidth = MediaQuery
+          .of(context)
+          .size
+          .width;
     Widget valveTitle;
     switch(valveNum){
       case 1:
-        valveTitle = Text("Valve 1");
+        valveTitle = Text("Valve 1", style: LuiTextTheme.luiH1);
         break;
       case 2:
-        valveTitle = Text("Valve 2");
+        valveTitle = Text("Valve 2", style: LuiTextTheme.luiH1);
         break;
       case 3:
-        valveTitle = Text("Valve 3");
+        valveTitle = Text("Valve 3", style: LuiTextTheme.luiH1);
         break;
       case 4:
-        valveTitle = Text("Valve 4");
+        valveTitle = Text("Valve 4", style: LuiTextTheme.luiH1);
         break;
       case 5:
-        valveTitle = Text("Valve 5");
+        valveTitle = Text("Valve 5", style: LuiTextTheme.luiH1);
         break;
       case 6:
-        valveTitle = Text("Valve 6");
+        valveTitle = Text("Valve 6", style: LuiTextTheme.luiH1);
         break;
       case 7:
-        valveTitle = Text("Valve 7");
+        valveTitle = Text("Valve 7", style: LuiTextTheme.luiH1);
         break;
       default:
-        valveTitle = Text("Default Valve");
+        valveTitle = Text("Default Valve", style: LuiTextTheme.luiH1);
         break;
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: valveTitle,
-        titleTextStyle: TextStyle(fontSize: 24, color: Colors.white),
-        backgroundColor: Colors.blue,
+          toolbarHeight: currentHeight *0.1,
+          title: valveTitle,
+          backgroundColor: Colors.cyan[300],
 
       ),
 
@@ -83,18 +91,19 @@ class ValveInputState extends State<ValveInput> {
             Container(
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.blueAccent,
+                color: Colors.cyan[200],
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Valve in use.",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    "Valve Enable",
+                    style: TextStyle(fontSize: 20, color: Colors.white,fontWeight: FontWeight.bold),
                   ),
                   Switch(
                     value: activeToggle,
+
                     onChanged: (bool value) {
                       setState(() {
                         activeToggle = value;
@@ -144,7 +153,7 @@ class ValveInputState extends State<ValveInput> {
             Container(
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.blueAccent,
+                color: Colors.cyan[200],
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Row(
@@ -152,7 +161,7 @@ class ValveInputState extends State<ValveInput> {
                 children: [
                   Text(
                     "Press when refilled.",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    style: TextStyle(fontSize: 20, color: Colors.white,fontWeight: FontWeight.bold),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -188,7 +197,7 @@ class ValveInputState extends State<ValveInput> {
                     },
 
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
+                      backgroundColor: Colors.green[300],
                       foregroundColor: Colors.black,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
@@ -196,7 +205,7 @@ class ValveInputState extends State<ValveInput> {
                     ),
                     child: Text(
                         "Refilled",
-                        style: TextStyle(fontSize: 18, color: Colors.white)
+                        style: TextStyle(fontSize: 18, color: Colors.white,fontWeight: FontWeight.bold)
                     ),
                   ), //
                 ],
@@ -206,7 +215,7 @@ class ValveInputState extends State<ValveInput> {
             Container(
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.blueAccent,
+                color: Colors.cyan[200],
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Row(
@@ -214,9 +223,9 @@ class ValveInputState extends State<ValveInput> {
                 children: [
                   Text(
                     "Milliliters Remaining",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(width: 16),
+
                   SizedBox(
                     width: 125,
                     child: TextField(
@@ -226,10 +235,13 @@ class ValveInputState extends State<ValveInput> {
                       decoration: InputDecoration(
                         labelText: "Milliliters",
                         labelStyle: TextStyle(fontSize: 18, color: Colors.black),
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                         fillColor: Colors.white,
                         filled: true,
                       ),
+                      textAlign: TextAlign.center,
                     ), //
                   ),
                 ],
@@ -239,7 +251,7 @@ class ValveInputState extends State<ValveInput> {
             Container(
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.blueAccent,
+                color: Colors.cyan[200],
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Row(
@@ -247,9 +259,8 @@ class ValveInputState extends State<ValveInput> {
                 children: [
                   Text(
                     "Milliliters Per Day",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(width: 16),
                   SizedBox(
                     width: 125,
                     child: TextField(
@@ -258,10 +269,13 @@ class ValveInputState extends State<ValveInput> {
                       decoration: InputDecoration(
                         labelText: "Milliliters",
                         labelStyle: TextStyle(fontSize: 18, color: Colors.black),
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                         fillColor: Colors.white,
                         filled: true,
                       ),
+                      textAlign: TextAlign.center,
                       onSubmitted: (value) {
                         if(value.isNotEmpty){
                           String targetUUID;
@@ -303,7 +317,7 @@ class ValveInputState extends State<ValveInput> {
             Container(
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.blueAccent,
+                color: Colors.cyan[200],
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Row(
@@ -311,7 +325,7 @@ class ValveInputState extends State<ValveInput> {
                 children: [
                   Text(
                     "Manual Cycle Start",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    style: TextStyle(fontSize: 20, color: Colors.white,fontWeight: FontWeight.bold),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -346,7 +360,7 @@ class ValveInputState extends State<ValveInput> {
                       BleController().writeBoolCharacteristic('1', targetUUID);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
+                      backgroundColor: Colors.green[300],
                       foregroundColor: Colors.black,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
@@ -354,7 +368,7 @@ class ValveInputState extends State<ValveInput> {
                     ),
                     child: Text(
                         "Water",
-                        style: TextStyle(fontSize: 18, color: Colors.white)
+                        style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)
                     ),
                   ), //
                 ],
@@ -364,7 +378,7 @@ class ValveInputState extends State<ValveInput> {
             Container(
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.blueAccent,
+                color: Colors.cyan[200],
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Row(
@@ -372,9 +386,8 @@ class ValveInputState extends State<ValveInput> {
                 children: [
                   Text(
                     "Manual Cycle Milliliters",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(width: 16),
                   SizedBox(
                     width: 125,
                     child: TextField(
@@ -383,10 +396,14 @@ class ValveInputState extends State<ValveInput> {
                         decoration: InputDecoration(
                           labelText: "Milliliters",
                           labelStyle: TextStyle(fontSize: 18, color: Colors.black),
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                           fillColor: Colors.white,
                           filled: true,
+
                         ),
+                        textAlign: TextAlign.center,
                         onSubmitted: (value) {
                           if (value.isNotEmpty) {
                             String targetUUID;
@@ -464,7 +481,6 @@ class ValveInputState extends State<ValveInput> {
     if (newValue != lastReceivedValue) { // Only update if value has changed
       setState(() {
         lastReceivedValue = newValue;
-        //print("Updating remaining milliliters value: $value");
         print("Updating remaining milliliters newValue: $newValue");
         volumeTrackController.text = newValue; // Update the TextField
       });
