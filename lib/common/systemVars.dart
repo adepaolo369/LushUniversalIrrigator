@@ -106,6 +106,14 @@ class SystemInfoHandler
    {
       await prefs?.remove("valves_list");
    }
+
+   Future<void> deleteValve(int indexOfValve) async
+   {
+      List<Valve> changeList = getValves();
+      changeList.removeAt(indexOfValve);
+      saveValves(changeList);
+   }
+
 }
 
 

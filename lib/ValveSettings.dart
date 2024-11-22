@@ -33,7 +33,14 @@ class ValveSettingsState extends State<ValveSettings> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+
+    return Scaffold(
+        appBar: AppBar(
+        title: Text("Hello Test"),
+        titleTextStyle: TextStyle(fontSize: 24, color: Colors.white ),
+    backgroundColor: Colors.blue,
+
+    ), body: Column(
       children: [
         // Expanded ListView to display valve items
         Expanded(
@@ -86,8 +93,9 @@ class ValveSettingsState extends State<ValveSettings> {
           ),
         ),
       ],
+    )
     );
-  }
+}
 
   void showAddValveDialog(BuildContext context) {
     showDialog(

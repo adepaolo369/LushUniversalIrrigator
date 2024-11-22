@@ -64,7 +64,7 @@ class BleController extends GetxController
         {
           return AlertDialog(
             title: Text("ERROR - Device Failed to Connect"),
-            content: Text("Device ${device.advName} failed to connect - Error 001"),
+            content: Text("Valve Control failed to connect - Error 001"),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -87,7 +87,7 @@ class BleController extends GetxController
            {
              return AlertDialog(
                title: Text("Connected"),
-               content: Text("Device connected: ${device.advName}"),
+               content: Text("Valve Control has been connected."),
                actions: [
                  TextButton(
                    onPressed: () => Navigator.pop(context),
