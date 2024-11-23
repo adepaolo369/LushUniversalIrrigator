@@ -194,7 +194,7 @@ class ValveSettingsState extends State<ValveSettings> {
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
                   onTap: () {
-                    valveNumPasser = index;
+                    globalIndex =index;
                     Navigator.push(context,MaterialPageRoute(builder: (context) => ValveInput()));
                   },
                   child: Container(
