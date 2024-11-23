@@ -27,25 +27,30 @@ class ValveInputState extends State<ValveInput> {
     super.initState();
     valveLoad();
     subscribeToVolTrackingCharacteristic();
+    if(globalLocalList.isNotEmpty) {
+      volumeTrackController.text = globalLocalList[globalIndex].actualWaterAmount.toString();
+      waterPerDayController.text = globalLocalList[globalIndex].waterAmountAutomatic.toString();
+      manualCycleController.text = globalLocalList[globalIndex].waterAmountManual.toString();
+    }
   }
 
 
-  bool activeToggle = true;
+  bool activeToggle = globalLocalList[globalIndex].inUse;
+  int valveNum = globalLocalList[globalIndex].valveID;
   bool refilled = false;
   bool manualWater = false;
-  int valveNum = 1;
   String lastReceivedValue = "";
 
   @override
   Widget build(BuildContext context) {
-      double currentHeight = MediaQuery
-          .of(context)
-          .size
-          .height;
-      double currentWidth = MediaQuery
-          .of(context)
-          .size
-          .width;
+    double currentHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
+    double currentWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
     Widget valveTitle;
     switch(valveNum){
       case 1:
@@ -76,9 +81,9 @@ class ValveInputState extends State<ValveInput> {
 
     return Scaffold(
       appBar: AppBar(
-          toolbarHeight: currentHeight *0.1,
-          title: valveTitle,
-          backgroundColor: Colors.cyan[300],
+        toolbarHeight: currentHeight *0.1,
+        title: valveTitle,
+        backgroundColor: Colors.cyan[300],
 
       ),
 
@@ -138,10 +143,14 @@ class ValveInputState extends State<ValveInput> {
 
                       if(value){
                         print("Writing value: '1' to $targetUUID");
+                        globalLocalList[globalIndex].inUse = true;
+                        SystemInfoHandler().saveValves(globalLocalList);
                         BleController().writeBoolCharacteristic('1', targetUUID);
                       }
                       else{
                         print("Writing value: '0' to $targetUUID");
+                        globalLocalList[globalIndex].inUse = false;
+                        SystemInfoHandler().saveValves(globalLocalList);
                         BleController().writeBoolCharacteristic('0', targetUUID);
                       }
                     },
@@ -305,6 +314,8 @@ class ValveInputState extends State<ValveInput> {
                               targetUUID = 'defaultUUID';
                               break;
                           }
+                          globalLocalList[globalIndex].waterAmountAutomatic = int.parse(value);
+                          SystemInfoHandler().saveValves(globalLocalList);
                           BleController().writeIntCharacteristic(value, targetUUID);
                         }
                       },
@@ -434,11 +445,58 @@ class ValveInputState extends State<ValveInput> {
                                 break;
                             }
                             print("Writing value: $value to $targetUUID");
+                            globalLocalList[globalIndex].waterAmountManual = int.parse(value);
+                            SystemInfoHandler().saveValves(globalLocalList);
                             BleController().writeIntCharacteristic(value, targetUUID);
                           }
                         }
                     ),
                   ),
+                ],
+              ),
+            ),
+            SizedBox(height: 16),
+            Container(
+              padding: EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.cyan[200],
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Delete Valve",
+                    style: TextStyle(fontSize: 20, color: Colors.white,fontWeight: FontWeight.bold),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if(globalLocalList.length == 1)
+                      {
+                        SystemInfoHandler().clearValves();
+                        Navigator.pop(context);
+                        Navigator.push(context,MaterialPageRoute(builder: (context) => ValveSettings()));
+                      }
+                      else {
+                        SystemInfoHandler().deleteValve(valveNum);
+                        Navigator.pop(context);
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (
+                            context) => ValveSettings()));
+                      }
+                    },
+
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red[300],
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    child: Text(
+                        "Delete",
+                        style: TextStyle(fontSize: 18, color: Colors.white,fontWeight: FontWeight.bold)
+                    ),
+                  ), //
                 ],
               ),
             ),
@@ -448,43 +506,44 @@ class ValveInputState extends State<ValveInput> {
     );
   }
   void subscribeToVolTrackingCharacteristic() {
-      String targetUUID;
-      switch (valveNum) {
-        case 1:
-          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1235';
-          break;
-        case 2:
-          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1236';
-          break;
-        case 3:
-          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1237';
-          break;
-        case 4:
-          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1238';
-          break;
-        case 5:
-          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1239';
-          break;
-        case 6:
-          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1240';
-          break;
-        case 7:
-          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1241';
-          break;
-        default:
-          targetUUID = 'defaultUUID';
-          break;
-      }
-      BleController().subscribeToCharacteristic(targetUUID, updateCharacteristicValue);
+    String targetUUID;
+    switch (valveNum) {
+      case 1:
+        targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1235';
+        break;
+      case 2:
+        targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1236';
+        break;
+      case 3:
+        targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1237';
+        break;
+      case 4:
+        targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1238';
+        break;
+      case 5:
+        targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1239';
+        break;
+      case 6:
+        targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1240';
+        break;
+      case 7:
+        targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1241';
+        break;
+      default:
+        targetUUID = 'defaultUUID';
+        break;
+    }
+    BleController().subscribeToCharacteristic(targetUUID, updateCharacteristicValue);
   }
   void updateCharacteristicValue(String newValue) {
     if (newValue != lastReceivedValue) { // Only update if value has changed
       setState(() {
         lastReceivedValue = newValue;
         print("Updating remaining milliliters newValue: $newValue");
+        globalLocalList[globalIndex].actualWaterAmount = int.parse(newValue);
+        SystemInfoHandler().saveValves(globalLocalList);
         volumeTrackController.text = newValue; // Update the TextField
       });
     }
   }
 }
-
