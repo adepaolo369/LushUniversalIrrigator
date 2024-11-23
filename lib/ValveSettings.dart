@@ -203,7 +203,7 @@ class ValveSettingsState extends State<ValveSettings> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Text(
-                      "Valve: ${valveList[index].valveID}, Water Amount: ${valveList[index].waterAmount}",
+                      "Valve: ${globalLocalList[index].valveID}, Water Amount: ${globalLocalList[index].waterAmountAutomatic}",
                       style: TextStyle(fontSize: 20, color: Colors.white,fontWeight: FontWeight.bold),
                     ),
                   ),
