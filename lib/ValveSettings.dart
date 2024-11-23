@@ -222,6 +222,10 @@ class ValveSettingsState extends State<ValveSettings> {
                         else{
                           globalHour = (int.parse(globalHour) - 12).toString();
                         }
+
+                        if((int.parse(globalHour) - 12) < 0){
+                          globalHour = '0';
+                        }
                         SystemInfoHandler().setTime(int.parse(globalHour),int.parse(globalMinute));
                         BleController().writeIntCharacteristic(globalHour, '19b10001-e8f2-537e-4f6c-d104768a1250');
                         BleController().writeIntCharacteristic(globalMinute, '19b10001-e8f2-537e-4f6c-d104768a1251');
