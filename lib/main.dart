@@ -50,7 +50,7 @@ class MyAppState extends State<MyApp>
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: luiSplashScreen(),
+      home: ValveSettings(),
     );
   }
 }

@@ -43,14 +43,14 @@ class ValveInputState extends State<ValveInput> {
 
   @override
   Widget build(BuildContext context) {
-      double currentHeight = MediaQuery
-          .of(context)
-          .size
-          .height;
-      double currentWidth = MediaQuery
-          .of(context)
-          .size
-          .width;
+    double currentHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
+    double currentWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
     Widget valveTitle;
     switch(valveNum){
       case 1:
@@ -81,9 +81,9 @@ class ValveInputState extends State<ValveInput> {
 
     return Scaffold(
       appBar: AppBar(
-          toolbarHeight: currentHeight *0.1,
-          title: valveTitle,
-          backgroundColor: Colors.cyan[300],
+        toolbarHeight: currentHeight *0.1,
+        title: valveTitle,
+        backgroundColor: Colors.cyan[300],
 
       ),
 
@@ -472,11 +472,11 @@ class ValveInputState extends State<ValveInput> {
                   ElevatedButton(
                     onPressed: () {
                       if(globalLocalList.length == 1)
-                        {
-                          SystemInfoHandler().clearValves();
-                          Navigator.pop(context);
-                          Navigator.push(context,MaterialPageRoute(builder: (context) => ValveSettings()));
-                        }
+                      {
+                        SystemInfoHandler().clearValves();
+                        Navigator.pop(context);
+                        Navigator.push(context,MaterialPageRoute(builder: (context) => ValveSettings()));
+                      }
                       else {
                         SystemInfoHandler().deleteValve(valveNum);
                         Navigator.pop(context);
@@ -506,34 +506,34 @@ class ValveInputState extends State<ValveInput> {
     );
   }
   void subscribeToVolTrackingCharacteristic() {
-      String targetUUID;
-      switch (valveNum) {
-        case 1:
-          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1235';
-          break;
-        case 2:
-          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1236';
-          break;
-        case 3:
-          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1237';
-          break;
-        case 4:
-          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1238';
-          break;
-        case 5:
-          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1239';
-          break;
-        case 6:
-          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1240';
-          break;
-        case 7:
-          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1241';
-          break;
-        default:
-          targetUUID = 'defaultUUID';
-          break;
-      }
-      BleController().subscribeToCharacteristic(targetUUID, updateCharacteristicValue);
+    String targetUUID;
+    switch (valveNum) {
+      case 1:
+        targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1235';
+        break;
+      case 2:
+        targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1236';
+        break;
+      case 3:
+        targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1237';
+        break;
+      case 4:
+        targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1238';
+        break;
+      case 5:
+        targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1239';
+        break;
+      case 6:
+        targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1240';
+        break;
+      case 7:
+        targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1241';
+        break;
+      default:
+        targetUUID = 'defaultUUID';
+        break;
+    }
+    BleController().subscribeToCharacteristic(targetUUID, updateCharacteristicValue);
   }
   void updateCharacteristicValue(String newValue) {
     if (newValue != lastReceivedValue) { // Only update if value has changed
