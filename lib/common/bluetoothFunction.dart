@@ -197,7 +197,6 @@ class BleController extends GetxController
               await characteristic.setNotifyValue(true);
               characteristic.lastValueStream.listen((value) {
                 print("Updating remaining milliliters value: $value");
-                //print("Updating remaining milliliters newValue: $newValue");
                 int  intValue = (value[0]) |
                 (value[1] << 8) |
                 (value[2] << 16) |
