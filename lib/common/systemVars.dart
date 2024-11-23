@@ -111,6 +111,7 @@ class SystemInfoHandler
    {
       List<Valve> changeList = getValves();
       changeList.removeAt(indexOfValve);
+
       saveValves(changeList);
    }
 

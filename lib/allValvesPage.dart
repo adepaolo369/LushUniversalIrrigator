@@ -33,7 +33,7 @@ class ValveInputState extends State<ValveInput> {
   bool activeToggle = true;
   bool refilled = false;
   bool manualWater = false;
-  int valveNum = 1;
+  int valveNum = valveNumPasser;
   String lastReceivedValue = "";
 
   @override
@@ -48,7 +48,7 @@ class ValveInputState extends State<ValveInput> {
           .width;
     Widget valveTitle;
     switch(valveNum){
-      case 1:
+      /*case 1:
         valveTitle = Text("Valve 1", style: LuiTextTheme.luiH1);
         break;
       case 2:
@@ -68,9 +68,9 @@ class ValveInputState extends State<ValveInput> {
         break;
       case 7:
         valveTitle = Text("Valve 7", style: LuiTextTheme.luiH1);
-        break;
+        break;*/
       default:
-        valveTitle = Text("Default Valve", style: LuiTextTheme.luiH1);
+        valveTitle = Text("Valve ${globalLocalList[valveNum].valveID}", style: LuiTextTheme.luiH1);
         break;
     }
 
@@ -439,6 +439,51 @@ class ValveInputState extends State<ValveInput> {
                         }
                     ),
                   ),
+                ],
+              ),
+            ),
+            SizedBox(height: 16),
+            Container(
+              padding: EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.cyan[200],
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Delete Valve",
+                    style: TextStyle(fontSize: 20, color: Colors.white,fontWeight: FontWeight.bold),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if(globalLocalList.length == 1)
+                        {
+                          SystemInfoHandler().clearValves();
+                          Navigator.pop(context);
+                          Navigator.push(context,MaterialPageRoute(builder: (context) => ValveSettings()));
+                        }
+                      else {
+                        SystemInfoHandler().deleteValve(valveNum);
+                        Navigator.pop(context);
+                        Navigator.push(context, MaterialPageRoute(builder: (
+                            context) => ValveSettings()));
+                      }
+                    },
+
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red[300],
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    child: Text(
+                        "Delete",
+                        style: TextStyle(fontSize: 18, color: Colors.white,fontWeight: FontWeight.bold)
+                    ),
+                  ), //
                 ],
               ),
             ),
