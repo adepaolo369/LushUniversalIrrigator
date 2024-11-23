@@ -22,6 +22,10 @@ class ValveSettings extends StatefulWidget {
 }
 
 class ValveSettingsState extends State<ValveSettings> {
+  late bool amPM;
+  late String globalHour;
+  late String globalMinute;
+
   @override
   void initState() {
     super.initState();
@@ -32,11 +36,29 @@ class ValveSettingsState extends State<ValveSettings> {
     }
     valveLoad();
     updateTime();
-
+    int sysHour = SystemInfoHandler().getTime()[0];
+    int sysMinute = SystemInfoHandler().getTime()[1];
+    globalHour = SystemInfoHandler().getTime()[0].toString();
+    globalMinute = SystemInfoHandler().getTime()[1].toString();
+    minuteController.text = sysMinute.toString();
+    if(sysHour > 11) {
+      amPM = true;
+    }
+    if(sysHour <= 11) {
+      amPM = false;
+    }
+    if(sysHour <= 0){
+      hourController.text = '12';
+    }
+    if(sysHour > 0 && sysHour <= 12){
+      hourController.text = sysHour.toString();
+    }
+    if(sysHour > 12){
+      sysHour = sysHour - 12;
+      hourController.text = sysHour.toString();
+    }
   }
-  bool amPM = false;
-  String globalHour = '0';
-  String globalMinute = '0';
+
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +144,7 @@ class ValveSettingsState extends State<ValveSettings> {
                               value = hourMax.toString();
                             }
                             if(int.parse(value) < 0){
-                              int hourMax = 1;
+                              int hourMax = 0;
                               value = hourMax.toString();
                             }
                             setState(() {
@@ -137,6 +159,7 @@ class ValveSettingsState extends State<ValveSettings> {
                               value = zeroHour.toString();
                             }
                             globalHour =value;
+                            SystemInfoHandler().setTime(int.parse(globalHour),int.parse(globalMinute));
                             BleController().writeIntCharacteristic(globalHour, '19b10001-e8f2-537e-4f6c-d104768a1250');
                             BleController().writeIntCharacteristic(globalMinute, '19b10001-e8f2-537e-4f6c-d104768a1251');
                           }
@@ -175,6 +198,7 @@ class ValveSettingsState extends State<ValveSettings> {
                               minuteController.text = value;
                             });
                             globalMinute = value;
+                            SystemInfoHandler().setTime(int.parse(globalHour),int.parse(globalMinute));
                             BleController().writeIntCharacteristic(globalHour, '19b10001-e8f2-537e-4f6c-d104768a1250');
                             BleController().writeIntCharacteristic(globalMinute, '19b10001-e8f2-537e-4f6c-d104768a1251');
                           }
@@ -198,6 +222,7 @@ class ValveSettingsState extends State<ValveSettings> {
                         else{
                           globalHour = (int.parse(globalHour) - 12).toString();
                         }
+                        SystemInfoHandler().setTime(int.parse(globalHour),int.parse(globalMinute));
                         BleController().writeIntCharacteristic(globalHour, '19b10001-e8f2-537e-4f6c-d104768a1250');
                         BleController().writeIntCharacteristic(globalMinute, '19b10001-e8f2-537e-4f6c-d104768a1251');
                       },
