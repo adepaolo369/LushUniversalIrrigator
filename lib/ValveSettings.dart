@@ -204,7 +204,7 @@ class ValveSettingsState extends State<ValveSettings> {
                     ),
                     child: Text(
                       "Valve: ${globalLocalList[index].valveID}, Water Amount: ${globalLocalList[index].waterAmountAutomatic}",
-                      style: TextStyle(fontSize: 18, color: Colors.white),
+                      style: TextStyle(fontSize: 20, color: Colors.white,fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
