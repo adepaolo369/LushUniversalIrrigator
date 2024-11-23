@@ -480,7 +480,7 @@ class ValveInputState extends State<ValveInput> {
                       else {
                         SystemInfoHandler().deleteValve(valveNum);
                         Navigator.pop(context);
-                        Navigator.push(context, MaterialPageRoute(builder: (
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (
                             context) => ValveSettings()));
                       }
                     },

@@ -6,6 +6,8 @@ class SystemInfoHandler
 {
    static const setupComplete = 'setupComp';
    static const deviceID = "deviceID";
+   static const waterTimeHour = "waterTimeHour";
+   static const waterTimeMinute = "waterTimeMinute";
    static const screenWidth = 0;
    static const screenHeight = 0;
    static List<String> valves = [];
@@ -25,6 +27,18 @@ class SystemInfoHandler
       prefs = await SharedPreferences.getInstance();
    }
 
+   Future<void> setTime( int hours, int minutes)
+   async
+   {
+      await prefs?.setInt(waterTimeHour, hours);
+      await prefs?.setInt(waterTimeMinute, minutes);
+   }
+
+   List<int> getTime()
+   {
+      List<int> getTime = [prefs?.getInt(waterTimeHour) ?? 0,prefs?.getInt(waterTimeMinute) ?? 0 ];
+      return getTime;
+   }
 
    bool deviceSetupComplete()
    {
@@ -107,10 +121,12 @@ class SystemInfoHandler
       await prefs?.remove("valves_list");
    }
 
-   Future<void> deleteValve(int indexOfValve) async
+   Future<void> deleteValve(int valveIDToDelete) async
    {
       List<Valve> changeList = getValves();
-      changeList.removeAt(indexOfValve);
+      int index = changeList.indexWhere((valve) => valve.valveID == valveIDToDelete);
+
+      changeList.removeAt(index);
 
       saveValves(changeList);
    }
