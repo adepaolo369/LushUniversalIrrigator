@@ -4,6 +4,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:get/get.dart';
 import 'package:get/get_common/get_reset.dart';
+import 'package:lui_project/settingPage.dart';
 import '/common/styles.dart';
 import 'package:flutter/services.dart';
 import 'package:lui_project/luiHomeScreen.dart';
@@ -13,6 +14,7 @@ import 'package:lui_project/common/Global.dart';
 import 'package:lui_project/allValvesPage.dart';
 final TextEditingController timeController = TextEditingController();
 final TextEditingController waterAmountController = TextEditingController();
+final TextEditingController valveIdSetController = TextEditingController();
 final TextEditingController hourController = TextEditingController();
 final TextEditingController minuteController = TextEditingController();
 
@@ -77,6 +79,15 @@ class ValveSettingsState extends State<ValveSettings> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Your Valves', style: LuiTextTheme.luiH1),
+            IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
+              },
+            ),
             ElevatedButton(
               onPressed: () {
                 print("Writing value: '1' to all refill uuid");
@@ -309,6 +320,11 @@ class ValveSettingsState extends State<ValveSettings> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
+                controller: valveIdSetController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(labelText: "Valve ID"),
+              ),
+              TextField(
                 controller: waterAmountController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(labelText: "Water Amount"),
@@ -325,11 +341,11 @@ class ValveSettingsState extends State<ValveSettings> {
             TextButton(
               onPressed: () {
                 int waterAmount = int.tryParse(waterAmountController.text) ?? 0;
-
+                int valveIDSet = int.tryParse(valveIdSetController.text) ?? 0;
                 // Add the new valve item to the list
                 setState(() {
                   Valve currentValve = Valve(
-                    valveID: globalLocalList.length + 1, // Incremental ID
+                    valveID: valveIDSet, // Set ID
                     waterAmountAutomatic: waterAmount, waterAmountManual: 0, actualWaterAmount: 0, inUse: true);
                   globalLocalList.add(currentValve);
                   SystemInfoHandler().addValve(currentValve);
