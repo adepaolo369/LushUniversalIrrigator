@@ -36,6 +36,9 @@ class ValveSettingsState extends State<ValveSettings> {
     }
     valveLoad();
     updateTime();
+    sendValveData();
+    sendWaterTime();
+
     int sysHour = SystemInfoHandler().getTime()[0];
     int sysMinute = SystemInfoHandler().getTime()[1];
     globalHour = SystemInfoHandler().getTime()[0].toString();
@@ -368,5 +371,163 @@ void updateTime() {
   BleController().writeIntCharacteristic(now.month.toString(), '19b10001-e8f2-537e-4f6c-d104768a1243');
   BleController().writeIntCharacteristic(now.year.toString(), '19b10001-e8f2-537e-4f6c-d104768a1244');
   BleController().writeIntCharacteristic(now.weekday.toString(), '19b10001-e8f2-537e-4f6c-d104768a1248');
+  return;
+}
+
+void sendValveData() {
+  for(int currentIndex =0; currentIndex < globalLocalList.length; currentIndex++) {
+    if (globalLocalList[currentIndex].valveID == 1) {
+      if (globalLocalList[currentIndex].inUse) {
+        BleController().writeBoolCharacteristic(
+            '1', '19b10001-e8f2-537e-4f6c-d104768a1214');
+      }
+      else {
+        BleController().writeBoolCharacteristic(
+            '0', '19b10001-e8f2-537e-4f6c-d104768a1214');
+      }
+
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].actualWaterAmount.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1235');
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].waterAmountAutomatic.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1228');
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].waterAmountManual.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1266');
+    }
+
+    if (globalLocalList[currentIndex].valveID == 2) {
+      if (globalLocalList[currentIndex].inUse) {
+        BleController().writeBoolCharacteristic(
+            '1', '19b10001-e8f2-537e-4f6c-d104768a1215');
+      }
+      else {
+        BleController().writeBoolCharacteristic(
+            '0', '19b10001-e8f2-537e-4f6c-d104768a1215');
+      }
+
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].actualWaterAmount.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1236');
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].waterAmountAutomatic.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1229');
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].waterAmountManual.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1267');
+    }
+
+    if (globalLocalList[currentIndex].valveID == 3) {
+      if (globalLocalList[currentIndex].inUse) {
+        BleController().writeBoolCharacteristic(
+            '1', '19b10001-e8f2-537e-4f6c-d104768a1216');
+      }
+      else {
+        BleController().writeBoolCharacteristic(
+            '0', '19b10001-e8f2-537e-4f6c-d104768a1216');
+      }
+
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].actualWaterAmount.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1237');
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].waterAmountAutomatic.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1230');
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].waterAmountManual.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1268');
+    }
+
+    if (globalLocalList[currentIndex].valveID == 4) {
+      if (globalLocalList[currentIndex].inUse) {
+        BleController().writeBoolCharacteristic(
+            '1', '19b10001-e8f2-537e-4f6c-d104768a1217');
+      }
+      else {
+        BleController().writeBoolCharacteristic(
+            '0', '19b10001-e8f2-537e-4f6c-d104768a1217');
+      }
+
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].actualWaterAmount.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1238');
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].waterAmountAutomatic.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1231');
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].waterAmountManual.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1269');
+    }
+    if (globalLocalList[currentIndex].valveID == 5) {
+      if (globalLocalList[currentIndex].inUse) {
+        BleController().writeBoolCharacteristic(
+            '1', '19b10001-e8f2-537e-4f6c-d104768a1218');
+      }
+      else {
+        BleController().writeBoolCharacteristic(
+            '0', '19b10001-e8f2-537e-4f6c-d104768a1218');
+      }
+
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].actualWaterAmount.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1239');
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].waterAmountAutomatic.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1232');
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].waterAmountManual.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1270');
+    }
+
+    if (globalLocalList[currentIndex].valveID == 6) {
+      if (globalLocalList[currentIndex].inUse) {
+        BleController().writeBoolCharacteristic(
+            '1', '19b10001-e8f2-537e-4f6c-d104768a1219');
+      }
+      else {
+        BleController().writeBoolCharacteristic(
+            '0', '19b10001-e8f2-537e-4f6c-d104768a1219');
+      }
+
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].actualWaterAmount.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1240');
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].waterAmountAutomatic.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1233');
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].waterAmountManual.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1271');
+    }
+
+    if (globalLocalList[currentIndex].valveID == 7) {
+      if (globalLocalList[currentIndex].inUse) {
+        BleController().writeBoolCharacteristic(
+            '1', '19b10001-e8f2-537e-4f6c-d104768a1220');
+      }
+      else {
+        BleController().writeBoolCharacteristic(
+            '0', '19b10001-e8f2-537e-4f6c-d104768a1220');
+      }
+
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].actualWaterAmount.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1241');
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].waterAmountAutomatic.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1234');
+      BleController().writeIntCharacteristic(
+          globalLocalList[currentIndex].waterAmountManual.toString(),
+          '19b10001-e8f2-537e-4f6c-d104768a1272');
+    }
+  }
+
+  return;
+}
+
+void sendWaterTime() {
+  BleController().writeIntCharacteristic(SystemInfoHandler().getTime()[0].toString(),'19b10001-e8f2-537e-4f6c-d104768a1250');
+  BleController().writeIntCharacteristic(SystemInfoHandler().getTime()[1].toString(),'19b10001-e8f2-537e-4f6c-d104768a1251');
   return;
 }
