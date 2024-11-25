@@ -15,8 +15,9 @@ import 'package:lui_project/ValveSettingsPage.dart';
 final TextEditingController timeController = TextEditingController();
 final TextEditingController waterAmountController = TextEditingController();
 final TextEditingController valveIdSetController = TextEditingController();
-final TextEditingController hourController = TextEditingController();
-final TextEditingController minuteController = TextEditingController();
+
+
+
 
 class ValvePage extends StatefulWidget {
   @override
@@ -26,37 +27,40 @@ class ValvePage extends StatefulWidget {
 class ValvePageState extends State<ValvePage>
 {
   late bool amPM;
-  late String globalHour;
-  late String globalMinute;
+  late int globalHour;
+  late int intAMPM;
+
 
   @override
   void initState() {
     super.initState();
     valveLoad();
     connectAndUpdateAll(context);
-
-    int sysHour = SystemInfoHandler().getTime()[0];
-    int sysMinute = SystemInfoHandler().getTime()[1];
-    globalHour = SystemInfoHandler().getTime()[0].toString();
-    globalMinute = SystemInfoHandler().getTime()[1].toString();
-    minuteController.text = sysMinute.toString();
-    if(sysHour > 11) {
+    globalHour = SystemInfoHandler().getTime()[0];
+    if(globalHour > 11) {
       amPM = true;
     }
-    if(sysHour <= 11) {
+    if(globalHour <= 11) {
       amPM = false;
     }
-    if(sysHour <= 0){
-      hourController.text = '12';
+    if(amPM){
+      intAMPM = 1;
     }
-    if(sysHour > 0 && sysHour <= 12){
-      hourController.text = sysHour.toString();
+    else{
+      intAMPM = 0;
     }
-    if(sysHour > 12){
-      sysHour = sysHour - 12;
-      hourController.text = sysHour.toString();
+
+    if(SystemInfoHandler().getTime()[0] <= 0){
+      globalHour = 11;
+    }
+    if(SystemInfoHandler().getTime()[0] > 0 && SystemInfoHandler().getTime()[0] <= 12){
+      globalHour = SystemInfoHandler().getTime()[0] - 1;
+    }
+    if(SystemInfoHandler().getTime()[0] > 12){
+      globalHour = SystemInfoHandler().getTime()[0] - 12;
     }
   }
+
 
 
   @override
@@ -85,29 +89,7 @@ class ValvePageState extends State<ValvePage>
                 );
               },
             ),
-            ElevatedButton(
-              onPressed: () {
-                print("Writing value: '1' to all refill uuid");
-                BleController().writeBoolCharacteristic('1', '19b10001-e8f2-537e-4f6c-d104768a1259');
-                BleController().writeBoolCharacteristic('1', '19b10001-e8f2-537e-4f6c-d104768a1260');
-                BleController().writeBoolCharacteristic('1', '19b10001-e8f2-537e-4f6c-d104768a1261');
-                BleController().writeBoolCharacteristic('1', '19b10001-e8f2-537e-4f6c-d104768a1262');
-                BleController().writeBoolCharacteristic('1', '19b10001-e8f2-537e-4f6c-d104768a1263');
-                BleController().writeBoolCharacteristic('1', '19b10001-e8f2-537e-4f6c-d104768a1264');
-                BleController().writeBoolCharacteristic('1', '19b10001-e8f2-537e-4f6c-d104768a1265');
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green[300],
-                foregroundColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-              child: Text(
-                  "All Refilled",
-                  style: TextStyle(fontSize: 18, color: Colors.white,fontWeight: FontWeight.bold)
-              ),
-            ), //
+
           ],
         ),
         backgroundColor: Colors.cyan[300],
@@ -122,130 +104,45 @@ class ValvePageState extends State<ValvePage>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "Water Time",
-                  style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                ElevatedButton(
+                  onPressed: () {
+                    print("Writing value: '1' to all refill uuid");
+                    BleController().writeBoolCharacteristic('1', '19b10001-e8f2-537e-4f6c-d104768a1259');
+                    BleController().writeBoolCharacteristic('1', '19b10001-e8f2-537e-4f6c-d104768a1260');
+                    BleController().writeBoolCharacteristic('1', '19b10001-e8f2-537e-4f6c-d104768a1261');
+                    BleController().writeBoolCharacteristic('1', '19b10001-e8f2-537e-4f6c-d104768a1262');
+                    BleController().writeBoolCharacteristic('1', '19b10001-e8f2-537e-4f6c-d104768a1263');
+                    BleController().writeBoolCharacteristic('1', '19b10001-e8f2-537e-4f6c-d104768a1264');
+                    BleController().writeBoolCharacteristic('1', '19b10001-e8f2-537e-4f6c-d104768a1265');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green[300],
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  child: Text(
+                      "All Refilled",
+                      style: TextStyle(fontSize: 18, color: Colors.white,fontWeight: FontWeight.bold)
+                  ),
                 ),
-                SizedBox(width: 16),
-                Flexible(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Flexible(
-                      child: TextField(
-                        controller: hourController,
-                        keyboardType: TextInputType.numberWithOptions(decimal: false, signed: false),
-                        decoration: InputDecoration(
-                          labelText: "H",
-                          labelStyle: TextStyle(fontSize: 18, color: Colors.black),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          fillColor: Colors.white,
-                          filled: true,
-                        ),
-                        textAlign: TextAlign.center,
-                        onSubmitted: (value) {
-                          if (value.isNotEmpty) {
-                            if(int.parse(value) > 12){
-                              int hourMax = 12;
-                              value = hourMax.toString();
-                            }
-                            if(int.parse(value) < 0){
-                              int hourMax = 0;
-                              value = hourMax.toString();
-                            }
-                            setState(() {
-                              hourController.text = value;
-                            });
-                            if(int.parse(value) == 12 && amPM == false){
-                              int zeroHour = 0;
-                              value = zeroHour.toString();
-                            }
-                            if(int.parse(value) != 12 && amPM == true){
-                              int zeroHour = int.parse(value) + 12;
-                              value = zeroHour.toString();
-                            }
-                            globalHour =value;
-                            SystemInfoHandler().setTime(int.parse(globalHour),int.parse(globalMinute));
-                            BleController().writeIntCharacteristic(globalHour, '19b10001-e8f2-537e-4f6c-d104768a1250');
-                            BleController().writeIntCharacteristic(globalMinute, '19b10001-e8f2-537e-4f6c-d104768a1251');
-                          }
-                        },
-                      ),
+                ElevatedButton(
+                  onPressed: () {
+                    showTimeSetDialog(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green[300],
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                    Text(
-                      " : ",
-                      style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                    Flexible(
-                      child: TextField(
-                        controller: minuteController,
-                        keyboardType: TextInputType.numberWithOptions(decimal: false, signed: false),
-                        decoration: InputDecoration(
-                          labelText: "M",
-                          labelStyle: TextStyle(fontSize: 18, color: Colors.black),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          fillColor: Colors.white,
-                          filled: true,
-                        ),
-                        textAlign: TextAlign.center,
-                        onSubmitted: (value) {
-                          if (value.isNotEmpty) {
-                            if(int.parse(value) > 59){
-                              int mixMax = 59;
-                              value = mixMax.toString();
-                            }
-                            if(int.parse(value) < 0){
-                              int minMax = 0;
-                              value = minMax.toString();
-                            }
-                            setState(() {
-                              minuteController.text = value;
-                            });
-                            globalMinute = value;
-                            SystemInfoHandler().setTime(int.parse(globalHour),int.parse(globalMinute));
-                            BleController().writeIntCharacteristic(globalHour, '19b10001-e8f2-537e-4f6c-d104768a1250');
-                            BleController().writeIntCharacteristic(globalMinute, '19b10001-e8f2-537e-4f6c-d104768a1251');
-                          }
-                        },
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Text(
-                      "AM",
-                      style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                    Switch(
-                    value: amPM,
-                      onChanged: (bool value) {
-                        setState(() {
-                          amPM = value;
-                        });
-                        if(value){
-                          globalHour = (int.parse(globalHour) + 12).toString();
-                        }
-                        else{
-                          globalHour = (int.parse(globalHour) - 12).toString();
-                        }
-
-                        if((int.parse(globalHour) - 12) < 0){
-                          globalHour = '0';
-                        }
-                        SystemInfoHandler().setTime(int.parse(globalHour),int.parse(globalMinute));
-                        BleController().writeIntCharacteristic(globalHour, '19b10001-e8f2-537e-4f6c-d104768a1250');
-                        BleController().writeIntCharacteristic(globalMinute, '19b10001-e8f2-537e-4f6c-d104768a1251');
-                      },
-                    ),
-                    Text(
-                      "PM",
-                      style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                ),
+                  ),
+                  child: Text(
+                      "Water Time",
+                      style: TextStyle(fontSize: 18, color: Colors.white,fontWeight: FontWeight.bold)
+                  ),
+                ), ////
               ],
             ),
           ),
@@ -343,7 +240,7 @@ class ValvePageState extends State<ValvePage>
                 setState(() {
                   Valve currentValve = Valve(
                     valveID: valveIDSet, // Set ID
-                    waterAmountAutomatic: waterAmount, waterAmountManual: 0, actualWaterAmount: 0, inUse: true);
+                    waterAmountAutomatic: waterAmount, waterAmountManual: 0, actualWaterAmount: 0, inUse: true, mode: true);
                   globalLocalList.add(currentValve);
                   SystemInfoHandler().addValve(currentValve);
                 });
@@ -361,7 +258,166 @@ class ValvePageState extends State<ValvePage>
       },
     );
   }
+  void showTimeSetDialog(BuildContext context) {
+    final List<int> minutesList = List.generate(60, (index) => index);
+    final List<int> hoursList = List.generate(12, (index) => index + 1);
+    final List<String> amPMList = ['AM' , 'PM'];
+    final List<String> dayList = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat','Sun'];
+    final FixedExtentScrollController hourController = FixedExtentScrollController(initialItem: globalHour );
+    final FixedExtentScrollController minuteController = FixedExtentScrollController(initialItem: SystemInfoHandler().getTime()[1]);
+    final FixedExtentScrollController amPMController = FixedExtentScrollController(initialItem: intAMPM);
+    final FixedExtentScrollController dayController = FixedExtentScrollController(initialItem: (SystemInfoHandler().getTime()[2] - 1));
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Set Water Time"),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 70,
+                height: 200,
+                child: ListWheelScrollView.useDelegate(
+                  controller: hourController,
+                  itemExtent: 50,
+                  perspective: 0.01,
+                  diameterRatio: 0.75,
+                  physics: FixedExtentScrollPhysics(),
+                  childDelegate: ListWheelChildBuilderDelegate(
+                      childCount: 12,
+                      builder: (context,index){
+                        return Center(
+                          child: Text(
+                            '${hoursList[index]}',
+                            style: TextStyle(fontSize: 32),
+                          ),
+
+                        );
+                      }
+                  ),
+                ),
+              ),
+              Text(
+                ":",
+                style: TextStyle(fontSize: 32),
+              ),
+              Container(
+                width: 70,
+                height: 200,
+                child: ListWheelScrollView.useDelegate(
+                  controller: minuteController,
+                  itemExtent: 50,
+                  perspective: 0.01,
+                  diameterRatio: 0.75,
+                  physics: FixedExtentScrollPhysics(),
+                  childDelegate: ListWheelChildBuilderDelegate(
+                    childCount: 60,
+                    builder: (context,index){
+                      return Center(
+                        child: Text(
+                          '${minutesList[index]}',
+                          style: TextStyle(fontSize: 32),
+                        ),
+
+                      );
+                    }
+                  ),
+                ),
+              ),
+              Container(
+                width: 70,
+                height: 200,
+                child: ListWheelScrollView.useDelegate(
+                  controller: amPMController,
+                  itemExtent: 50,
+                  perspective: 0.01,
+                  diameterRatio: 0.75,
+                  physics: FixedExtentScrollPhysics(),
+                  childDelegate: ListWheelChildBuilderDelegate(
+                      childCount: 2,
+                      builder: (context,index){
+                        return Center(
+                          child: Text(
+                            amPMList[index],
+                            style: TextStyle(fontSize: 32),
+                          ),
+
+                        );
+                      }
+                  ),
+                ),
+              ),
+              Container(
+                width: 70,
+                height: 200,
+
+                child: ListWheelScrollView.useDelegate(
+                  controller: dayController,
+                  itemExtent: 50,
+                  perspective: 0.01,
+                  diameterRatio: 0.75,
+                  physics: FixedExtentScrollPhysics(),
+                  childDelegate: ListWheelChildBuilderDelegate(
+                      childCount: 7,
+                      builder: (context,index){
+                        return Center(
+                          child: Text(
+                            dayList[index],
+                            style: TextStyle(fontSize: 32),
+                          ),
+
+                        );
+                      }
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog without saving
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                late int calcHours;
+                if((hourController.selectedItem + 1) == 12 && amPMController.selectedItem == 0 ){
+                  calcHours = 0;
+                }
+                else if((hourController.selectedItem + 1) < 12 && amPMController.selectedItem == 0) {
+                  calcHours =  hourController.selectedItem + 1;
+                }
+                else if((hourController.selectedItem + 1) == 12 && amPMController.selectedItem == 1){
+                  calcHours = 12;
+                }
+                else if((hourController.selectedItem + 1) < 12 && amPMController.selectedItem == 1){
+                  calcHours = hourController.selectedItem + 13;
+                }
+                intAMPM = amPMController.selectedItem;
+                globalHour = hourController.selectedItem;
+
+                SystemInfoHandler().setTime(calcHours,minuteController.selectedItem,(dayController.selectedItem + 1));
+                BleController().writeIntCharacteristic(calcHours.toString(), '19b10001-e8f2-537e-4f6c-d104768a1250');
+                BleController().writeIntCharacteristic(minuteController.selectedItem.toString(), '19b10001-e8f2-537e-4f6c-d104768a1251');
+                BleController().writeIntCharacteristic((dayController.selectedItem + 1 ).toString(), '19b10001-e8f2-537e-4f6c-d104768a1273');
+
+                Navigator.of(context).pop(); // Close dialog
+              },
+              child: Text("Set"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }
+
+
 
 void valveLoad()
 {
@@ -539,6 +595,7 @@ void sendValveData() {
 void sendWaterTime() {
   BleController().writeIntCharacteristic(SystemInfoHandler().getTime()[0].toString(),'19b10001-e8f2-537e-4f6c-d104768a1250');
   BleController().writeIntCharacteristic(SystemInfoHandler().getTime()[1].toString(),'19b10001-e8f2-537e-4f6c-d104768a1251');
+  BleController().writeIntCharacteristic(SystemInfoHandler().getTime()[2].toString(),'19b10001-e8f2-537e-4f6c-d104768a1273');
   return;
 }
 
