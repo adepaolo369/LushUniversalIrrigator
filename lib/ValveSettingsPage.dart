@@ -38,6 +38,7 @@ class ValveSettingsState extends State<ValveSettings> {
 
 
   bool activeToggle = globalLocalList[globalIndex].inUse;
+  bool modeToggle = globalLocalList[globalIndex].mode;
   int valveNum = globalLocalList[globalIndex].valveID;
   bool refilled = false;
   bool manualWater = false;
@@ -171,6 +172,87 @@ class ValveSettingsState extends State<ValveSettings> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
+                    "Valve Mode",
+                    style: TextStyle(fontSize: 20, color: Colors.white,fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    width: 180,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          "Daily",
+                          style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                        Switch(
+                          value: modeToggle,
+                          onChanged: (bool value) {
+                            setState(() {
+                              modeToggle = value;
+                            });
+                            String targetUUID;
+                            switch(valveNum){
+                              case 1:
+                                targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1221';
+                                break;
+                              case 2:
+                                targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1222';
+                                break;
+                              case 3:
+                                targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1223';
+                                break;
+                              case 4:
+                                targetUUID = '19b10001-e8f2-537e-4f6c-d104768a124';
+                                break;
+                              case 5:
+                                targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1225';
+                                break;
+                              case 6:
+                                targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1226';
+                                break;
+                              case 7:
+                                targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1227';
+                                break;
+                              default:
+                                targetUUID = 'defaultUUID';
+                                break;
+                            }
+
+                            if(value){
+                              print("Writing value: '1' to $targetUUID");
+                              globalLocalList[globalIndex].mode = true;
+                              SystemInfoHandler().saveValves(globalLocalList);
+                              BleController().writeBoolCharacteristic('1', targetUUID);
+                            }
+                            else{
+                              print("Writing value: '0' to $targetUUID");
+                              globalLocalList[globalIndex].mode = false;
+                              SystemInfoHandler().saveValves(globalLocalList);
+                              BleController().writeBoolCharacteristic('0', targetUUID);
+                            }
+                          },
+                        ), //
+                        Text(
+                          "Weekly",
+                          style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 16),
+            Container(
+              padding: EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.cyan[200],
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
                     "Press when refilled.",
                     style: TextStyle(fontSize: 20, color: Colors.white,fontWeight: FontWeight.bold),
                   ),
@@ -269,7 +351,7 @@ class ValveSettingsState extends State<ValveSettings> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Milliliters Per Day",
+                    "Auto Milliliters",
                     style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
@@ -398,7 +480,7 @@ class ValveSettingsState extends State<ValveSettings> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Manual Cycle Milliliters",
+                    "Manual Milliliters",
                     style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(

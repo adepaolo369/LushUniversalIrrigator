@@ -8,6 +8,7 @@ class SystemInfoHandler
    static const deviceID = "deviceID";
    static const waterTimeHour = "waterTimeHour";
    static const waterTimeMinute = "waterTimeMinute";
+   static const waterTimeDay = "waterTimeDay";
    static const screenWidth = 0;
    static const screenHeight = 0;
    static List<String> valves = [];
@@ -27,16 +28,17 @@ class SystemInfoHandler
       prefs = await SharedPreferences.getInstance();
    }
 
-   Future<void> setTime( int hours, int minutes)
+   Future<void> setTime( int hours, int minutes, int day)
    async
    {
       await prefs?.setInt(waterTimeHour, hours);
       await prefs?.setInt(waterTimeMinute, minutes);
+      await prefs?.setInt(waterTimeDay, day);
    }
 
    List<int> getTime()
    {
-      List<int> getTime = [prefs?.getInt(waterTimeHour) ?? 0,prefs?.getInt(waterTimeMinute) ?? 0 ];
+      List<int> getTime = [prefs?.getInt(waterTimeHour) ?? 0,prefs?.getInt(waterTimeMinute) ?? 0,prefs?.getInt(waterTimeDay) ?? 0 ];
       return getTime;
    }
 
@@ -142,10 +144,11 @@ class Valve
    int waterAmountAutomatic;
    int actualWaterAmount;
    bool inUse = true;
+   bool mode = true;
 
 
    //
-   Valve({required this.valveID,required this.waterAmountManual,required this.waterAmountAutomatic, required this.actualWaterAmount, required this.inUse});
+   Valve({required this.valveID,required this.waterAmountManual,required this.waterAmountAutomatic, required this.actualWaterAmount, required this.inUse, required this.mode});
 
    // Convert a valve object to a Map (for JSON encoding).
    Map<String, dynamic> toJson() => {
@@ -154,6 +157,7 @@ class Valve
       'waterAmountAutomatic': waterAmountAutomatic,
       'actualWaterAmount' : actualWaterAmount,
       'inUse' : inUse,
+      'mode' : mode,
    };
 
    // Convert a Map to a Valve object (for JSON decoding).
@@ -165,6 +169,7 @@ class Valve
          waterAmountAutomatic: json['waterAmountAutomatic'] ?? 0,
          actualWaterAmount: json['actualWaterAmount'] ?? 0,
          inUse: json['inUse'] ?? true,
+         mode: json['mode'] ?? true,
       );
    }
 }
