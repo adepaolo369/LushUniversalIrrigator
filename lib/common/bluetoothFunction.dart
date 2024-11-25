@@ -6,7 +6,7 @@ import 'package:lui_project/common/systemVars.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get.dart';
 import 'package:lui_project/common/Global.dart';
-import 'package:lui_project/allValvesPage.dart';
+import 'package:lui_project/ValveSettingsPage.dart';
 
 
 class BleController extends GetxController
@@ -45,8 +45,6 @@ class BleController extends GetxController
            }
          });
         FlutterBluePlus.stopScan();
-         int i = await FlutterBluePlus.scanResults.length ;
-         print("Hello how are you omg please work  $i");
       }
     }
   }
@@ -222,7 +220,3 @@ class BleController extends GetxController
     }
   }
 }
-
-
-
-

@@ -9,16 +9,16 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:lui_project/common/bluetoothFunction.dart';
 import 'package:get/get.dart';
 
-import 'ValveSettings.dart';
+import 'ValvesPage.dart';
 
-class HomeScreen extends StatefulWidget
+class InitialSetup extends StatefulWidget
 {
   @override
-  HomeScreenState createState() => HomeScreenState();
+  InitialSetupState createState() => InitialSetupState();
 
 }
 
-class HomeScreenState extends State<HomeScreen> {
+class InitialSetupState extends State<InitialSetup> {
   bool setupComplete = false;
   bool setupBegin = false;
   bool deviceSetupLoad = true;
@@ -49,14 +49,13 @@ class HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  @override
-  void dispose() {
+  /*void dispose() {
     scanResultsSubscription.cancel();
     isScanningSubscription.cancel();
     setupComplete = false;
     SystemInfoHandler().setSetUpStatus(setupComplete);
     super.dispose();
-  }
+  }*/
   Future onScanPressed() async {
     try {
       // `withServices` is required on iOS for privacy purposes, ignored on android.
@@ -122,7 +121,7 @@ class HomeScreenState extends State<HomeScreen> {
         body: Container(
           width: currentWidth,
           height: currentHeight,
-          child: setupBegin ? AvailableDevices(context)  : initialSetup(
+          child: setupBegin ? availableDevices(context)  : initialSetup(
               context),
 
         )
@@ -166,7 +165,7 @@ class HomeScreenState extends State<HomeScreen> {
 
 
 
-  Widget AvailableDevices(BuildContext context) {
+  Widget availableDevices(BuildContext context) {
     double currentHeight = MediaQuery
         .of(context)
         .size
@@ -206,8 +205,8 @@ class HomeScreenState extends State<HomeScreen> {
                                       onTap: ()=> {
                                         SystemInfoHandler().saveDeviceID(data.device.remoteId.toString()),
                                         setupComplete = true,
-                                        SystemInfoHandler().setSetUpStatus(setupComplete),
-                                        Navigator.push(context,MaterialPageRoute(builder: (context) => ValveSettings())),
+                                        SystemInfoHandler().setSetUpStatus(true),
+                                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => ValvePage())),
                                       }
 
                                     ),
