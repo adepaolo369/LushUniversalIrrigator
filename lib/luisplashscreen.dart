@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
-import 'package:lui_project/ValveSettings.dart';
+import 'package:lui_project/ValvesPage.dart';
 import 'package:lui_project/common/systemVars.dart';
 import '/common/styles.dart';
 import 'package:flutter/services.dart';
-import 'package:lui_project/luiHomeScreen.dart';
-import 'package:lui_project/allValvesPage.dart';
+import 'package:lui_project/luiInitialSetup.dart';
+import 'package:lui_project/ValveSettingsPage.dart';
 class luiSplashScreen extends StatefulWidget {
   const luiSplashScreen({super.key});
 
@@ -29,11 +29,11 @@ class _luiSplashScreenState extends State<luiSplashScreen> with SingleTickerProv
     {
       if(setupComplete)
         {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => ValveSettings(),));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => ValvePage(),));
         }
       else {
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => HomeScreen(),));
+            MaterialPageRoute(builder: (_) => InitialSetup(),));
       }
     });
   }

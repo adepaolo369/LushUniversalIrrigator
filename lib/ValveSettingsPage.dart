@@ -5,22 +5,24 @@ import 'package:get/get.dart';
 import 'package:get/get_common/get_reset.dart';
 import '/common/styles.dart';
 import 'package:flutter/services.dart';
-import 'package:lui_project/luiHomeScreen.dart';
+import 'package:lui_project/luiInitialSetup.dart';
 import 'package:lui_project/common/systemVars.dart';
 import 'package:lui_project/common/bluetoothFunction.dart';
 import 'package:lui_project/common/Global.dart';
-import 'package:lui_project/ValveSettings.dart';
+import 'package:lui_project/ValvesPage.dart';
 
 final TextEditingController volumeTrackController = TextEditingController();
 final TextEditingController waterPerDayController = TextEditingController();
 final TextEditingController manualCycleController = TextEditingController();
 
-class ValveInput extends StatefulWidget {
+class ValveSettings extends StatefulWidget {
+  const ValveSettings({super.key});
+
   @override
-  ValveInputState createState() => ValveInputState();
+  ValveSettingsState createState() => ValveSettingsState();
 }
 
-class ValveInputState extends State<ValveInput> {
+class ValveSettingsState extends State<ValveSettings> {
 
   @override
   void initState() {
@@ -475,13 +477,13 @@ class ValveInputState extends State<ValveInput> {
                       {
                         SystemInfoHandler().clearValves();
                         Navigator.pop(context);
-                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => ValveSettings()));
+                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => ValvePage()));
                       }
                       else {
                         SystemInfoHandler().deleteValve(valveNum);
                         Navigator.pop(context);
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (
-                            context) => ValveSettings()));
+                            context) => ValvePage()));
                       }
                     },
 

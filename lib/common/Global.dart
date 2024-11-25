@@ -9,5 +9,5 @@ import 'package:get/get.dart';
 
 List<BluetoothService> servicesGlobal = [];
 late DateTime timeDesired;
-late List<Valve> globalLocalList;
+List<Valve> globalLocalList = [];
 late int globalIndex;

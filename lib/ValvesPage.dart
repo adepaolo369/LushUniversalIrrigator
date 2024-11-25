@@ -7,23 +7,24 @@ import 'package:get/get_common/get_reset.dart';
 import 'package:lui_project/settingPage.dart';
 import '/common/styles.dart';
 import 'package:flutter/services.dart';
-import 'package:lui_project/luiHomeScreen.dart';
+import 'package:lui_project/luiInitialSetup.dart';
 import 'package:lui_project/common/systemVars.dart';
 import 'package:lui_project/common/bluetoothFunction.dart';
 import 'package:lui_project/common/Global.dart';
-import 'package:lui_project/allValvesPage.dart';
+import 'package:lui_project/ValveSettingsPage.dart';
 final TextEditingController timeController = TextEditingController();
 final TextEditingController waterAmountController = TextEditingController();
 final TextEditingController valveIdSetController = TextEditingController();
 final TextEditingController hourController = TextEditingController();
 final TextEditingController minuteController = TextEditingController();
 
-class ValveSettings extends StatefulWidget {
+class ValvePage extends StatefulWidget {
   @override
-  ValveSettingsState createState() => ValveSettingsState();
+  ValvePageState createState() => ValvePageState();
 }
 
-class ValveSettingsState extends State<ValveSettings> {
+class ValvePageState extends State<ValvePage>
+{
   late bool amPM;
   late String globalHour;
   late String globalMinute;
@@ -31,15 +32,8 @@ class ValveSettingsState extends State<ValveSettings> {
   @override
   void initState() {
     super.initState();
-    BluetoothDevice device = BluetoothDevice.fromId(SystemInfoHandler().getDeviceID() ?? "none");
-    if(device.isDisconnected)
-    {
-      BleController().connectToDevice(device, context);
-    }
     valveLoad();
-    updateTime();
-    sendValveData();
-    sendWaterTime();
+    connectAndUpdateAll(context);
 
     int sysHour = SystemInfoHandler().getTime()[0];
     int sysMinute = SystemInfoHandler().getTime()[1];
@@ -266,7 +260,7 @@ class ValveSettingsState extends State<ValveSettings> {
                 child: GestureDetector(
                   onTap: () {
                     globalIndex =index;
-                    Navigator.push(context,MaterialPageRoute(builder: (context) => ValveInput()));
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => ValveSettings()));
                   },
                   child: Container(
                     padding: EdgeInsets.all(16.0),
@@ -546,4 +540,18 @@ void sendWaterTime() {
   BleController().writeIntCharacteristic(SystemInfoHandler().getTime()[0].toString(),'19b10001-e8f2-537e-4f6c-d104768a1250');
   BleController().writeIntCharacteristic(SystemInfoHandler().getTime()[1].toString(),'19b10001-e8f2-537e-4f6c-d104768a1251');
   return;
+}
+
+Future<void> connectAndUpdateAll(BuildContext context) async
+{
+  BluetoothDevice device = BluetoothDevice.fromId(SystemInfoHandler().getDeviceID() ?? "none");
+  if(device.isDisconnected)
+  {
+
+    await BleController().connectToDevice(device, context);
+
+  }
+  updateTime();
+  sendValveData();
+  sendWaterTime();
 }
