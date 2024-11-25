@@ -85,13 +85,63 @@ class SettingsPageState extends State<SettingsPage> {
                 ), //
               ],
             ),
-          ),]
+          ),
+          SizedBox(height: 16),
+          Container(
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.cyan[200],
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Information",
+                  style: TextStyle(fontSize: 20, color: Colors.white,fontWeight: FontWeight.bold),
+                ),
+                ElevatedButton(
+                  onPressed: ()
+                  {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context)
+                      {
+                        return AlertDialog(
+                          title: Text("Information"),
+                          content: Text("Developers: Andrew Nash and Alexander N. DePalo"),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text("OK"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green[300],
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  child: Text(
+                      "Press",
+                      style: TextStyle(fontSize: 18, color: Colors.white,fontWeight: FontWeight.bold)
+                  ),
+                ), //
+              ],
+            ),
+          ),
+        ]
     )
     ),
     );
   }
 }
-
 
 
 class BluetoothScanScreen extends StatefulWidget

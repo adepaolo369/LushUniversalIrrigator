@@ -45,8 +45,6 @@ class BleController extends GetxController
            }
          });
         FlutterBluePlus.stopScan();
-         int i = await FlutterBluePlus.scanResults.length ;
-         print("Hello how are you omg please work  $i");
       }
     }
   }
