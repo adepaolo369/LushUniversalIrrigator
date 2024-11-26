@@ -278,12 +278,12 @@ class ValvePageState extends State<ValvePage>
             children: [
               Container(
                 width: 70,
-                height: 200,
+                height: 145,
                 child: ListWheelScrollView.useDelegate(
                   controller: hourController,
                   itemExtent: 50,
-                  perspective: 0.01,
-                  diameterRatio: 0.75,
+                  perspective: 0.005,
+                  diameterRatio: 1.5,
                   physics: FixedExtentScrollPhysics(),
                   childDelegate: ListWheelChildBuilderDelegate(
                       childCount: 12,
@@ -305,12 +305,12 @@ class ValvePageState extends State<ValvePage>
               ),
               Container(
                 width: 70,
-                height: 200,
+                height: 145,
                 child: ListWheelScrollView.useDelegate(
                   controller: minuteController,
                   itemExtent: 50,
-                  perspective: 0.01,
-                  diameterRatio: 0.75,
+                  perspective: 0.005,
+                  diameterRatio: 1.5,
                   physics: FixedExtentScrollPhysics(),
                   childDelegate: ListWheelChildBuilderDelegate(
                     childCount: 60,
@@ -328,12 +328,12 @@ class ValvePageState extends State<ValvePage>
               ),
               Container(
                 width: 70,
-                height: 200,
+                height: 145,
                 child: ListWheelScrollView.useDelegate(
                   controller: amPMController,
                   itemExtent: 50,
-                  perspective: 0.01,
-                  diameterRatio: 0.75,
+                  perspective: 0.005,
+                  diameterRatio: 1.5,
                   physics: FixedExtentScrollPhysics(),
                   childDelegate: ListWheelChildBuilderDelegate(
                       childCount: 2,
@@ -351,13 +351,13 @@ class ValvePageState extends State<ValvePage>
               ),
               Container(
                 width: 70,
-                height: 200,
+                height: 145,
 
                 child: ListWheelScrollView.useDelegate(
                   controller: dayController,
                   itemExtent: 50,
-                  perspective: 0.01,
-                  diameterRatio: 0.75,
+                  perspective: 0.005,
+                  diameterRatio: 1.5,
                   physics: FixedExtentScrollPhysics(),
                   childDelegate: ListWheelChildBuilderDelegate(
                       childCount: 7,
