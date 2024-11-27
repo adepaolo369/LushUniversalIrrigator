@@ -6,6 +6,7 @@ import '/common/styles.dart';
 import 'package:flutter/services.dart';
 import 'package:lui_project/luiInitialSetup.dart';
 import 'package:lui_project/ValveSettingsPage.dart';
+
 class luiSplashScreen extends StatefulWidget {
   const luiSplashScreen({super.key});
 
@@ -68,13 +69,10 @@ class _luiSplashScreenState extends State<luiSplashScreen> with SingleTickerProv
         verticalDirection: VerticalDirection.down,
        alignment: WrapAlignment.center,
        children: [
-         Transform.rotate(
-           angle: 0.5,
-         child: Icon(
-         WeatherIcons.wi_raindrop,
-         size: currentwidth * 0.6,
-         color: Colors.lightBlue,
-         )),
+         Image.asset('lib/common/assets/MainLuiLogo.jpg',
+         width: 200,
+         height: 200),
+         SizedBox(height:30),
          Text('Lush Universal Irrigator',
            style: LuiTextTheme.luiH1,
          )
