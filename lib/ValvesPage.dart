@@ -236,20 +236,44 @@ class ValvePageState extends State<ValvePage>
               onPressed: () {
                 int waterAmount = int.tryParse(waterAmountController.text) ?? 0;
                 int valveIDSet = int.tryParse(valveIdSetController.text) ?? 0;
-                // Add the new valve item to the list
-                setState(() {
-                  Valve currentValve = Valve(
-                    valveID: valveIDSet, // Set ID
-                    waterAmountAutomatic: waterAmount, waterAmountManual: 0, actualWaterAmount: 0, inUse: true, mode: true);
-                  globalLocalList.add(currentValve);
-                  SystemInfoHandler().addValve(currentValve);
-                });
 
-                Navigator.of(context).pop(); // Close dialog
+                if (waterAmount < 0){
+                  waterAmount = 0;
+                }
+                if (valveIDSet < 1){
+                  valveIDSet = 1;
+                }
+                if (valveIDSet > 7){
+                  valveIDSet = 7;
+                }
+                bool valveAlreadyExistsWithID = false;
+                for(int currentIndex = 0; currentIndex < globalLocalList.length; currentIndex++) {
+                  if(globalLocalList[currentIndex].valveID == valveIDSet) {
+                    valveAlreadyExistsWithID = true;
+                    break;
+                  }
+                }
 
-                // Clear input fields
-                timeController.clear();
-                waterAmountController.clear();
+                if (valveAlreadyExistsWithID){
+                  Navigator.of(context).pop(); // Close dialog
+                  // Clear input fields
+                  timeController.clear();
+                  waterAmountController.clear();
+                }
+                else{
+                  // Add the new valve item to the list
+                  setState(() {
+                    Valve currentValve = Valve(
+                        valveID: valveIDSet, // Set ID
+                        waterAmountAutomatic: waterAmount, waterAmountManual: 0, actualWaterAmount: 0, inUse: true, mode: true);
+                    globalLocalList.add(currentValve);
+                    SystemInfoHandler().addValve(currentValve);
+                  });
+                  Navigator.of(context).pop(); // Close dialog
+                  // Clear input fields
+                  timeController.clear();
+                  waterAmountController.clear();
+                }
               },
               child: Text("Add"),
             ),
