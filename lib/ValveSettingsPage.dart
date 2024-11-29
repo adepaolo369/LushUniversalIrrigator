@@ -279,7 +279,7 @@ class ValveSettingsState extends State<ValveSettings> {
                           targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1264';
                           break;
                         case 7:
-                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a12265';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1265';
                           break;
                         default:
                           targetUUID = 'defaultUUID';

@@ -204,39 +204,47 @@ class InitialSetupState extends State<InitialSetup>
 
                           return Flexible(//Return flexible holder for list view.
                             fit: FlexFit.tight,
-                            child: ListView.builder(//Listview to display all the devices
-                              shrinkWrap: true,
-                              itemCount: snapshot.data!.length,
-                              itemBuilder: (context, index)
+                            child: ListView.builder(//Listview to display all available bluetooth devices.
+                              shrinkWrap: true,//Makes it scrollable
+                              itemCount: snapshot.data!.length,//Item count based on snapshot length
+                              itemBuilder: (context, index)//Item builder passed context and given an index to track listing.
                               {
-                                final data = snapshot.data![index];
-                                return Card(
+                                final data = snapshot.data![index];//put data from index of snapshot into local data variable
+                                return Card(//Return an elevated, tappable card with general info about device.
                                   elevation: 2,
                                   child: ListTile(
                                     title: Text(data.device.advName),
                                     subtitle: Text(data.device.remoteId.toString()),
                                     trailing: Text(data.rssi.toString()),
-                                      onTap: ()=> {
-                                        SystemInfoHandler().saveDeviceID(data.device.remoteId.toString()),
-                                        setupComplete = true,
-                                        SystemInfoHandler().setSetUpStatus(true),
-                                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => ValvePage())),
-                                      }
-
-                                    ),
-                                  );
-                                }),
+                                    onTap: ()=>
+                                    { /*On tap of the device, complete the setup, save deviceID for reconnection
+                                      * save setup status to memory, and move to Valve page.*/
+                                      SystemInfoHandler().saveDeviceID(data.device.remoteId.toString()),
+                                      setupComplete = true,
+                                      SystemInfoHandler().setSetUpStatus(true),
+                                      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => ValvePage())),
+                                    }
+                                  ),
+                                );
+                              }
+                            ),
                           );
-                        }else{
-                          return Center(child: Text("No Device Found"),);
                         }
-                      }),
-                  SizedBox(height: 10,),
-                  ElevatedButton(onPressed: ()
-                  {
-                    onScanPressed();
-                    // await controller.disconnectDevice();
-                  }, child: Text("SCAN")),
+                      else
+                      {
+                          return Center(child: Text("No Device Found"),);
+                      }
+                    }
+                  ),
+                  SizedBox(height: 10),//Sized box for spacing
+                  ElevatedButton(
+                    onPressed: ()
+                    {
+                      //Call upon scan method upon pressing scan button
+                      onScanPressed();
+                      // await controller.disconnectDevice();
+                    },
+                    child: Text("SCAN")),
                 ],
               ),
             );

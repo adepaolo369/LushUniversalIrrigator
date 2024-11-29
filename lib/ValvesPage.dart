@@ -458,10 +458,11 @@ void updateTime() {
   BleController().writeIntCharacteristic(now.second.toString(), '19b10001-e8f2-537e-4f6c-d104768a1247');
   BleController().writeIntCharacteristic(now.minute.toString(), '19b10001-e8f2-537e-4f6c-d104768a1246');
   BleController().writeIntCharacteristic(now.hour.toString(), '19b10001-e8f2-537e-4f6c-d104768a1245');
+  BleController().writeIntCharacteristic(now.weekday.toString(), '19b10001-e8f2-537e-4f6c-d104768a1248');
   BleController().writeIntCharacteristic(now.day.toString(), '19b10001-e8f2-537e-4f6c-d104768a1242');
   BleController().writeIntCharacteristic(now.month.toString(), '19b10001-e8f2-537e-4f6c-d104768a1243');
   BleController().writeIntCharacteristic(now.year.toString(), '19b10001-e8f2-537e-4f6c-d104768a1244');
-  BleController().writeIntCharacteristic(now.weekday.toString(), '19b10001-e8f2-537e-4f6c-d104768a1248');
+
   return;
 }
 
