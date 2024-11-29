@@ -269,6 +269,7 @@ class ValvePageState extends State<ValvePage>
                     globalLocalList.add(currentValve);
                     SystemInfoHandler().addValve(currentValve);
                   });
+                  connectAndUpdateAll(context);
                   Navigator.of(context).pop(); // Close dialog
                   // Clear input fields
                   timeController.clear();

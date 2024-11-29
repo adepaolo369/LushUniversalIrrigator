@@ -190,24 +190,32 @@ class InitialSetupState extends State<InitialSetup>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children:
                 [
-                  StreamBuilder<List<ScanResult>>(
-                      stream: controller.scanResults,
-                      builder: (context, snapshot) {
-                        if (snapshot.data?.isNotEmpty ?? false)
+                  //Create a list based on the stream of scan results.
+                  StreamBuilder<List<ScanResult>>
+                  (
+                    //Set data stream to controllers results
+                    stream: controller.scanResults,
+                    builder: (context, snapshot)
+                    {
+                      /* Check to see if the scan snapshot picked up any devices.
+                      * If yes, show the devices in a neat scrollable list of entries.*/
+                      if (snapshot.data?.isNotEmpty ?? false)
                         {
-                          return Flexible(
-                              fit: FlexFit.tight,
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: snapshot.data!.length,
-                                itemBuilder: (context, index) {
-                                  final data = snapshot.data![index];
-                                  return Card(
-                                    elevation: 2,
-                                    child: ListTile(
-                                      title: Text(data.device.advName),
-                                      subtitle: Text(data.device.remoteId.toString()),
-                                      trailing: Text(data.rssi.toString()),
+
+                          return Flexible(//Return flexible holder for list view.
+                            fit: FlexFit.tight,
+                            child: ListView.builder(//Listview to display all the devices
+                              shrinkWrap: true,
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (context, index)
+                              {
+                                final data = snapshot.data![index];
+                                return Card(
+                                  elevation: 2,
+                                  child: ListTile(
+                                    title: Text(data.device.advName),
+                                    subtitle: Text(data.device.remoteId.toString()),
+                                    trailing: Text(data.rssi.toString()),
                                       onTap: ()=> {
                                         SystemInfoHandler().saveDeviceID(data.device.remoteId.toString()),
                                         setupComplete = true,
