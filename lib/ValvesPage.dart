@@ -76,6 +76,7 @@ class ValvePageState extends State<ValvePage>
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: currentHeight * 0.1,
+        actions:[overallBluth],
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

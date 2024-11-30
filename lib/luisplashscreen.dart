@@ -87,9 +87,14 @@ class _luiSplashScreenState extends State<luiSplashScreen> with SingleTickerProv
           alignment: WrapAlignment.center,
           children:
           [//Show sized logo and title of project
-            Image.asset('assets/LUILogo.png',
-              width: 200,
-              height: 200
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20), // Adjust the radius as needed
+              child: Image.asset(
+                'assets/LUILogo.png',
+                width: 200, // Adjust the width as needed
+                height: 200, // Adjust the height as needed
+                fit: BoxFit.cover, // Ensures the image fits the rounded container
+              ),
             ),
             SizedBox(height:30),
             Text('Lush Universal Irrigator',

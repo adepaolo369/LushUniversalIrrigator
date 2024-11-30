@@ -85,6 +85,7 @@ class ValveSettingsState extends State<ValveSettings> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: currentHeight *0.1,
+        actions:[overallBluth],
         title: valveTitle,
         backgroundColor: Colors.cyan[300],
 

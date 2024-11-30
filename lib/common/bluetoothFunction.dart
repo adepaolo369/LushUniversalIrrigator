@@ -220,3 +220,45 @@ class BleController extends GetxController
     }
   }
 }
+
+
+
+
+
+class BluetoothStatusIndicator extends StatelessWidget
+{
+  Stream<List<BluetoothDevice>> getConnectedDevicesStream()
+  {
+    return Stream.periodic(const Duration(seconds: 2))
+        .asyncMap((_) => FlutterBluePlus.connectedDevices);
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<BluetoothDevice>>(
+      stream: getConnectedDevicesStream(),
+      builder: (context, snapshot) {
+        final connectedDevices = snapshot.data ?? [];
+        final isConnected = connectedDevices.isNotEmpty;
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            children: [
+              Icon(
+                isConnected ? Icons.bluetooth_connected : Icons.bluetooth_disabled,
+                color: isConnected ? Colors.blue : Colors.grey,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                isConnected ? 'Connected' : 'Disconnected',
+                style: const TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
