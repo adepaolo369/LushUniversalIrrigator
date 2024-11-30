@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+//Abstract class for holding lui text styles.
 abstract class LuiTextTheme
 {
+  //Header 1 Style
   static final TextStyle luiH1 = TextStyle(
     fontFamily: 'Poppins',
     color: Colors.white,
@@ -16,6 +18,7 @@ abstract class LuiTextTheme
     height: 0.1,
     fontWeight: FontWeight.bold);
 
+  //Header 2 style
   static final TextStyle luiH2 = TextStyle(
     fontFamily: 'Poppins',
       color: Colors.black,
@@ -24,6 +27,7 @@ abstract class LuiTextTheme
       height: 0.1,
       fontWeight: FontWeight.w600);
 
+  //Body Text 1 style
   static final TextStyle luiT1 = TextStyle(
       fontFamily: 'Poppins',
       color: Colors.black,

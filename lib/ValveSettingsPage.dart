@@ -85,6 +85,7 @@ class ValveSettingsState extends State<ValveSettings> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: currentHeight *0.1,
+        actions:[overallBluth],
         title: valveTitle,
         backgroundColor: Colors.cyan[300],
 
@@ -279,7 +280,7 @@ class ValveSettingsState extends State<ValveSettings> {
                           targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1264';
                           break;
                         case 7:
-                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a12265';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1265';
                           break;
                         default:
                           targetUUID = 'defaultUUID';
@@ -430,7 +431,7 @@ class ValveSettingsState extends State<ValveSettings> {
                           targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1252';
                           break;
                         case 2:
-                          targetUUID = '19B10001-E8F2-537E-4F6C-D104768A1253';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1253';
                           break;
                         case 3:
                           targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1254';
@@ -442,7 +443,7 @@ class ValveSettingsState extends State<ValveSettings> {
                           targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1256';
                           break;
                         case 6:
-                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1258';
+                          targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1257';
                           break;
                         case 7:
                           targetUUID = '19b10001-e8f2-537e-4f6c-d104768a1258';

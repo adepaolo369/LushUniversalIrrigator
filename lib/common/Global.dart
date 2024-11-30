@@ -7,7 +7,13 @@ import 'package:lui_project/common/systemVars.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get.dart';
 
+import 'bluetoothFunction.dart';
+
+
+/*Global variables for holding desired watering time, bluetooth device services,
+local valve list, and global current valve index.*/
 List<BluetoothService> servicesGlobal = [];
 late DateTime timeDesired;
 List<Valve> globalLocalList = [];
 late int globalIndex;
+BluetoothStatusIndicator overallBluth = BluetoothStatusIndicator();

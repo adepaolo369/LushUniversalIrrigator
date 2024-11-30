@@ -4,30 +4,31 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 class SystemInfoHandler
 {
+   //Initialize variables to hold string keys for locations of the appropriate
+   //system values.
    static const setupComplete = 'setupComp';
    static const deviceID = "deviceID";
    static const waterTimeHour = "waterTimeHour";
    static const waterTimeMinute = "waterTimeMinute";
    static const waterTimeDay = "waterTimeDay";
-   static const screenWidth = 0;
-   static const screenHeight = 0;
-   static List<String> valves = [];
+
+   //Create a single instance of shared preferences to store all the data with.
    static SharedPreferences? prefs;
 
+   //Creates a singleton pattern to only create a single instance of the System Info Handler.
    static final SystemInfoHandler instance = SystemInfoHandler._internal();
-
    factory SystemInfoHandler()
    {
       return instance;
    }
-
    SystemInfoHandler._internal();
-
+   //Future function to initialize pref variable to the system instance of shared preferences.
    static Future<void> init() async
    {
       prefs = await SharedPreferences.getInstance();
    }
 
+   //Method that saves the values for the automatic watering time to system memory.
    Future<void> setTime( int hours, int minutes, int day)
    async
    {
@@ -36,12 +37,14 @@ class SystemInfoHandler
       await prefs?.setInt(waterTimeDay, day);
    }
 
+   //Returns the time saved in system memory.
    List<int> getTime()
    {
       List<int> getTime = [prefs?.getInt(waterTimeHour) ?? 0,prefs?.getInt(waterTimeMinute) ?? 0,prefs?.getInt(waterTimeDay) ?? 0 ];
       return getTime;
    }
 
+   //Checks if the device setup has been complete in system memory.
    bool deviceSetupComplete()
    {
       return prefs?.getBool(setupComplete) ?? false;
@@ -58,28 +61,24 @@ class SystemInfoHandler
       return prefs?.getBool(setupComplete) ?? false;
    }
 
-   /// Save a Bluetooth device ID to SharedPreferences
+   // Saves a bluetooth ID to system memory
    Future<void> saveDeviceID(String dID) async
    {
       await prefs?.setString(deviceID, dID);
    }
-   /// Retrieve the Bluetooth device ID from SharedPreferences
-   String? getDeviceID() {
+   //Gets the bluetooth device ID from the system memory.
+   String? getDeviceID()
+   {
       return prefs?.getString(deviceID);
    }
 
-   /// Clear the Bluetooth device ID (optional)
-   static Future<void> clearDeviceID() async {
+   //Clears the device ID from system memory.
+   static Future<void> clearDeviceID() async
+   {
       await prefs?.remove(deviceID);
    }
 
-   /*static Future<void> saveScreenSize(int screenHeight, int screenWidth) async
-   {
-      await dataSaved?.setInt(screenHeight,screenHeight);
-   }*/
-
-
-
+   //Saves the list of valves passed to it to system memory in the form of a list of JSON strings.
    Future<void> saveValves(List<Valve> valvesIn) async
    {
 
@@ -99,12 +98,13 @@ class SystemInfoHandler
    }
 
 
-
+   //Get the list of saved vales from memory.
    List<Valve> getValves()
    {
       // Get the JSON string from SharedPreferences.
       List<String>? jsonStringList = prefs?.getStringList("valves_list");
 
+      //If the json list exists in memory, get it and return it.
       if (jsonStringList != null)
       {
          // Decode the JSON string into a List of Maps.
@@ -112,7 +112,7 @@ class SystemInfoHandler
          return finalList;
       }
 
-      //If list of valves is empty
+      //If list of valves doesn't exist or is empty, return an empty list.
       return [];
    }
 
