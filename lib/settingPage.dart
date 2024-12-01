@@ -143,6 +143,52 @@ class SettingsPageState extends State<SettingsPage> {
   }
 }
 
+/*
+class InfoScreen extends StatefulWidget
+{
+  @override
+  InfoScreenState createState() => InfoScreenState();
+}
+
+class InfoScreenState extends State<InfoScreen>
+{
+
+
+
+  @override
+  void initState()
+  {
+    super.initState();
+
+
+  }
+
+  Widget build(BuildContext context)
+  {double currentHeight = MediaQuery
+      .of(context)
+      .size
+      .height;
+  double currentWidth = MediaQuery
+      .of(context)
+      .size
+      .width;
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: currentHeight * 0.1,
+        title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [Text('Settings', style: LuiTextTheme.luiH1),]
+        ),
+        backgroundColor: Colors.cyan[300],
+      ),
+      body:
+
+    );
+  }
+}
+*/
+
+
 
 class BluetoothScanScreen extends StatefulWidget
 {
@@ -202,7 +248,8 @@ class BluetoothScanScreenState extends State<BluetoothScanScreen> {
     SystemInfoHandler().setSetUpStatus(setupComplete);
     super.dispose();
   }*/
-  Future onScanPressed() async {
+  Future onScanPressed() async
+  {
     try {
       // `withServices` is required on iOS for privacy purposes, ignored on android.
       var withServices = [Guid("180f")]; // Battery Level Service

@@ -8,54 +8,36 @@ import 'package:get/get.dart';
 import 'package:lui_project/common/Global.dart';
 import 'package:lui_project/ValveSettingsPage.dart';
 
-
+//Bluetooth manager class declaration
 class BleController extends GetxController
 {
 
-  Future<void> requestPermissions() async {
+  //Future method to request the appropriate user permissions for needed bluetooth capabilities.
+  Future<void> requestPermissions() async
+  {
     await Permission.bluetoothScan.request();
     await Permission.bluetoothConnect.request();
     await Permission.locationWhenInUse.request();
   }
 
-  void setFlutterBlueLogLevel() {
+  //Log level for debug testing
+  void setFlutterBlueLogLevel()
+  {
     FlutterBluePlus.setLogLevel(LogLevel.verbose, color: false);
     return;
   }
-// This Function will help users to scan near by BLE devices and get the list of Bluetooth devices.
-  Future scanDevices() async
-  {
-     //turnOnBluetooth();
-    setFlutterBlueLogLevel();
-    await requestPermissions();
-    if (await Permission.bluetoothScan
-        .request()
-        .isGranted) {
-      if (await Permission.bluetoothConnect
-          .request()
-          .isGranted) {
-         FlutterBluePlus.startScan(timeout: const Duration(seconds: 5));
-         FlutterBluePlus.scanResults.listen((results) {
-           if (results.isEmpty) {
-             print("No devices found");
-           } else {
-             for (ScanResult result in results) {
-               print("Found device: ${result.device.advName} - ${result.device.remoteId}");
-             }
-           }
-         });
-        FlutterBluePlus.stopScan();
-      }
-    }
-  }
-// This function will help user to connect to BLE devices.
+
+//Future function that connects to desired bluetooth device.
   Future<void> connectToDevice(BluetoothDevice device, BuildContext context)async
   {
-    try {
+    //Try catch block for device connection
+    try
+    {
       await device.connect(timeout: Duration(seconds: 15));
     }
     catch(e)
     {
+      //If failure to connect, return error alert dialogue to user.
       showDialog(
         context: context,
         builder: (BuildContext context)
@@ -63,18 +45,20 @@ class BleController extends GetxController
           return AlertDialog(
             title: Text("ERROR - Device Failed to Connect"),
             content: Text("Valve Control failed to connect - Error 001"),
-            actions: [
+            actions:
+            [
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text("OK"),
               ),
-            ],
+            ],//Actions grouping
           );
-        },
-      );
+        },//Builder
+      );//ShowDialog
 
-      return;
+      return;//Return and exit method without doing anything.
     }
+    //Listen for the connection state after an attempt at connecting.
     device.connectionState.listen((isConnected)
     {
        if(isConnected == BluetoothConnectionState.connected)

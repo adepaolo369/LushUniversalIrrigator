@@ -16,4 +16,5 @@ List<BluetoothService> servicesGlobal = [];
 late DateTime timeDesired;
 List<Valve> globalLocalList = [];
 late int globalIndex;
+//Declaration of widget for monitoring valve brain connection status.
 BluetoothStatusIndicator overallBluth = BluetoothStatusIndicator();
