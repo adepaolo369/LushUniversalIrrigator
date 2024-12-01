@@ -69,8 +69,10 @@ class _luiSplashScreenState extends State<luiSplashScreen> with SingleTickerProv
     //Return a screen with green gradient background and a centered logo with title.
     return Scaffold(
       body: Container(
+        //Set Container to span all of available screen space
         width: double.infinity,
         height: double.infinity,
+        //Align to center and give a box decoration with a green gradient, set it to go from top right to bottom left.
         alignment: Alignment.center,
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -88,12 +90,13 @@ class _luiSplashScreenState extends State<luiSplashScreen> with SingleTickerProv
           children:
           [//Show sized logo and title of project
             ClipRRect(
-              borderRadius: BorderRadius.circular(20), // Adjust the radius as needed
-              child: Image.asset(
+              borderRadius: BorderRadius.circular(20), // Adjust the radius.
+              child:
+              Image.asset(
                 'assets/LUILogo.png',
-                width: 200, // Adjust the width as needed
-                height: 200, // Adjust the height as needed
-                fit: BoxFit.cover, // Ensures the image fits the rounded container
+                width: 200, // Adjust the width.
+                height: 200, // Adjust the height.
+                fit: BoxFit.cover, // Ensures the image fits the rounded container.
               ),
             ),
             SizedBox(height:30),
