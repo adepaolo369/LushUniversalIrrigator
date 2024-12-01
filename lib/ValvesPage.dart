@@ -76,6 +76,7 @@ class ValvePageState extends State<ValvePage>
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: currentHeight * 0.1,
+        actions:[overallBluth],
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -269,6 +270,7 @@ class ValvePageState extends State<ValvePage>
                     globalLocalList.add(currentValve);
                     SystemInfoHandler().addValve(currentValve);
                   });
+                  connectAndUpdateAll(context);
                   Navigator.of(context).pop(); // Close dialog
                   // Clear input fields
                   timeController.clear();
