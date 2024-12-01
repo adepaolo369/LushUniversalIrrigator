@@ -58,9 +58,10 @@ class BleController extends GetxController
 
       return;//Return and exit method without doing anything.
     }
-    //Listen for the connection state after an attempt at connecting.
+    //Listen for the bluetooth connection state of device after an attempt at connecting.
     device.connectionState.listen((isConnected)
     {
+      //If the connection is successful, show alert dialog to let user know of success.
        if(isConnected == BluetoothConnectionState.connected)
        {
          showDialog(
@@ -79,51 +80,79 @@ class BleController extends GetxController
              );
            },
          );
+         //Save device ID for re-connection later.
          SystemInfoHandler().saveDeviceID(device.remoteId.toString());
       }
        else
-       {
+       {//Test code
         print("Device Disconnected");
       }
     });
+    //Wait for discovering of device services.
     await discover(device);
   }
+    //A special get method to create a data stream gotten from the scan results.
     Stream<List<ScanResult>> get scanResults => FlutterBluePlus.scanResults;
-  Future<void> discover(BluetoothDevice device) async {
+
+  //Future method to get all services from the specific device and store them in a global variable.
+  Future<void> discover(BluetoothDevice device) async
+  {
+    //Get services and store in global variable.
     servicesGlobal = await device.discoverServices();
   }
+  //Future void method to write a integer to a specified UUID characteristic.
+  //This is used for writing int data to the board's specific services.
+  Future<void> writeIntCharacteristic(String value, String uuid) async
+  {
 
-  Future<void> writeIntCharacteristic(String value, String uuid) async {
     try {
+      //Parse string value as an int.
       int intValue = int.parse(value);
+      //Print int value to console for logging purposes
       print("int intValue: $intValue");
+      //Create a list of byte values based on int and do bit shifting to store them.
       List<int> byteValue = [
         (intValue & 0xFF),
         (intValue >> 8 & 0xFF),
       ];
-
+      //Print int byte value to console
       print("int bytleValue: $byteValue");
 
+      //Variable to track whether a characteristic has been written to
       bool characteristicWritten = false;
 
-      for (BluetoothService service in servicesGlobal) {
-        for (BluetoothCharacteristic characteristic in service.characteristics) {
-          if (characteristic.uuid.toString() == uuid) {
-            // Check if the characteristic is writable
-            if (characteristic.properties.write) {
+      //For all services in the global services variable...
+      for (BluetoothService service in servicesGlobal)
+      {
+        //For all the characteristics in the service...
+        for (BluetoothCharacteristic characteristic in service.characteristics)
+        {
+          //If the specific characteristic equals the parameter uuID...
+          if (characteristic.uuid.toString() == uuid)
+          {
+            // Check if the characteristic is writable..
+            if (characteristic.properties.write)
+            {
+              //If true, then print to console UUID and write the byte value to the characteristic.
               print("Writing to characteristic with UUID: $uuid");
               await characteristic.write(byteValue);
               characteristicWritten = true;
               break;
-            } else {
+            }
+            //Else, print to console the UUID is not writable.
+            else
+            {
               print("Characteristic with UUID $uuid is not writable.");
             }
           }
         }
+        //If already written, then break loop.
         if (characteristicWritten) break;
       }
 
-      if (!characteristicWritten) {
+      //If unable to write to, then print not writable to console.
+      if (!characteristicWritten)
+      {
         print("No writable characteristic found with UUID: $uuid");
       }
     } catch (e) {
@@ -131,6 +160,7 @@ class BleController extends GetxController
     }
   }
 
+  //Future method to write a boolean variable to the Arduino board.
   Future<void> writeBoolCharacteristic(String value, String uuid) async {
     try {
       int intValue = int.parse(value);
