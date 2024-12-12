@@ -1,16 +1,8 @@
-# lui_project
+# LUI - Lush Universal Irrigator
 
-A new Flutter project.
+This is the main repository for the Lush Universal Irrigator(LUI), a two part automatic watering system composed of a main controller/brain and a valve system with built in water reservoir. The system is designed to be modular, simple, and expandable, with the ability to control and handle up to 7 valves at once. The system is controlled via Flutter SDK and Dart powered mobile application that communicates with the system through Bluetooth Low Energy(BLE) signals.
 
-## Getting Started
+This repo contains both the hardware code and the software code necessary to run the system with each separated into their own folder. The technical report as well, containing many of the specs will be included alongside the system as well. If you have any questions or would like to no more please reach out to Alexander DePaolo at adepaolo369@gmail.com
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Lead App Software Developer, Project Lead, and Physical Designer - Alexander N. DePaolo
+## Lead Firmware Developer, Co-Lead App Software Developer, Electrical Designer, and Project Co-Lead - Andrew Nash
