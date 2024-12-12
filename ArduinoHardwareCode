@@ -1,0 +1,822 @@
+/*
+ 
+*/
+
+//include Bluetooth® Low Energy and real time clock libraries
+#include <ArduinoBLE.h>
+#include <RTC.h>
+
+BLEService valveControlService("19B10000-E8F2-537E-4F6C-D104768A1213"); // Bluetooth® Low Energy Service
+
+// Bluetooth® Low Energy Valve Switch Characteristics - custom 128-bit UUID, read and writable by central 
+
+//Characteristics to control if valve is enabled - BOOL
+BLEBoolCharacteristic valve1ActiveCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
+BLEBoolCharacteristic valve2ActiveCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1215", BLERead | BLEWrite);
+BLEBoolCharacteristic valve3ActiveCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1216", BLERead | BLEWrite);
+BLEBoolCharacteristic valve4ActiveCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1217", BLERead | BLEWrite);
+BLEBoolCharacteristic valve5ActiveCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1218", BLERead | BLEWrite);
+BLEBoolCharacteristic valve6ActiveCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1219", BLERead | BLEWrite);
+BLEBoolCharacteristic valve7ActiveCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1220", BLERead | BLEWrite);
+//Characteristics to control the mode of valves, false for daily mode, true for weekly mode - BOOL
+BLEBoolCharacteristic valve1ModeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1221", BLERead | BLEWrite);
+BLEBoolCharacteristic valve2ModeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1222", BLERead | BLEWrite);
+BLEBoolCharacteristic valve3ModeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1223", BLERead | BLEWrite);
+BLEBoolCharacteristic valve4ModeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1224", BLERead | BLEWrite);
+BLEBoolCharacteristic valve5ModeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1225", BLERead | BLEWrite);
+BLEBoolCharacteristic valve6ModeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1226", BLERead | BLEWrite);
+BLEBoolCharacteristic valve7ModeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1227", BLERead | BLEWrite);
+//Characteristics to control how much water is let out per automatic cycle in milliliters - INT
+BLEIntCharacteristic valve1VolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1228", BLERead | BLEWrite);
+BLEIntCharacteristic valve2VolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1229", BLERead | BLEWrite);
+BLEIntCharacteristic valve3VolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1230", BLERead | BLEWrite);
+BLEIntCharacteristic valve4VolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1231", BLERead | BLEWrite);
+BLEIntCharacteristic valve5VolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1232", BLERead | BLEWrite);
+BLEIntCharacteristic valve6VolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1233", BLERead | BLEWrite);
+BLEIntCharacteristic valve7VolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1234", BLERead | BLEWrite);
+//Characteristics to keep track of the volume left in each reservoir in milliliters - INT
+BLEIntCharacteristic valve1TrackVolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1235", BLERead | BLENotify | BLEWrite);
+BLEIntCharacteristic valve2TrackVolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1236", BLERead | BLENotify | BLEWrite);
+BLEIntCharacteristic valve3TrackVolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1237", BLERead | BLENotify | BLEWrite);
+BLEIntCharacteristic valve4TrackVolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1238", BLERead | BLENotify | BLEWrite);
+BLEIntCharacteristic valve5TrackVolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1239", BLERead | BLENotify | BLEWrite);
+BLEIntCharacteristic valve6TrackVolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1240", BLERead | BLENotify | BLEWrite);
+BLEIntCharacteristic valve7TrackVolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1241", BLERead | BLENotify | BLEWrite);
+//Characteristics to communicate time variables - 7 INTS 1 BOOL
+BLEIntCharacteristic timeDayCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1242", BLERead | BLEWrite);
+BLEIntCharacteristic timeMonthCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1243", BLERead | BLEWrite);
+BLEIntCharacteristic timeYearCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1244", BLERead | BLEWrite);
+BLEIntCharacteristic timeHourCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1245", BLERead | BLEWrite);
+BLEIntCharacteristic timeMinCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1246", BLERead | BLEWrite);
+BLEIntCharacteristic timeSecCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1247", BLERead | BLEWrite);
+BLEIntCharacteristic timeDayofWeekCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1248", BLERead | BLEWrite);
+BLEBoolCharacteristic timeDLSavingsCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1249", BLERead | BLEWrite);
+//Characteristics to enter when watering will occer - INT
+BLEIntCharacteristic waterHourCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1250", BLERead | BLEWrite);
+BLEIntCharacteristic waterMinCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1251", BLERead | BLEWrite);
+BLEIntCharacteristic waterDayCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1273", BLERead | BLEWrite);
+//Characteristics to cycle the valves manualy - BOOL
+BLEBoolCharacteristic valve1ManualCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1252", BLERead | BLEWrite);
+BLEBoolCharacteristic valve2ManualCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1253", BLERead | BLEWrite);
+BLEBoolCharacteristic valve3ManualCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1254", BLERead | BLEWrite);
+BLEBoolCharacteristic valve4ManualCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1255", BLERead | BLEWrite);
+BLEBoolCharacteristic valve5ManualCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1256", BLERead | BLEWrite);
+BLEBoolCharacteristic valve6ManualCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1257", BLERead | BLEWrite);
+BLEBoolCharacteristic valve7ManualCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1258", BLERead | BLEWrite);
+//Characteristics to control reset of water level in program - BOOL
+BLEBoolCharacteristic valve1TopCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1259", BLERead | BLEWrite);
+BLEBoolCharacteristic valve2TopCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1260", BLERead | BLEWrite);
+BLEBoolCharacteristic valve3TopCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1261", BLERead | BLEWrite);
+BLEBoolCharacteristic valve4TopCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1262", BLERead | BLEWrite);
+BLEBoolCharacteristic valve5TopCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1263", BLERead | BLEWrite);
+BLEBoolCharacteristic valve6TopCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1264", BLERead | BLEWrite);
+BLEBoolCharacteristic valve7TopCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1265", BLERead | BLEWrite);
+//Characteristics to control how much water is let out per manual cycle in milliliters - INT
+BLEIntCharacteristic valve1ManVolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1266", BLERead | BLEWrite);
+BLEIntCharacteristic valve2ManVolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1267", BLERead | BLEWrite);
+BLEIntCharacteristic valve3ManVolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1268", BLERead | BLEWrite);
+BLEIntCharacteristic valve4ManVolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1269", BLERead | BLEWrite);
+BLEIntCharacteristic valve5ManVolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1270", BLERead | BLEWrite);
+BLEIntCharacteristic valve6ManVolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1271", BLERead | BLEWrite);
+BLEIntCharacteristic valve7ManVolumeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1272", BLERead | BLEWrite);
+
+BLEBoolCharacteristic resetTimeCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1275", BLERead | BLEWrite);
+
+//place valve numbers into varriables
+short valvePin1 = 0;
+short valvePin2 = 1;
+short valvePin3 = 2;
+short valvePin4 = 3;
+short valvePin5 = 4;
+short valvePin6 = 5;
+short valvePin7 = 6;
+//variable to track if the autmatic cycle has been run today
+int lastDay = -1;
+//declare variable to allow for first scan items
+bool firstScan;
+
+//function to translate int into Month enum
+Month getMonth(int month){
+  switch(month){
+    case 1:
+      return Month::JANUARY;
+    case 2:
+      return Month::FEBRUARY;
+    case 3:
+      return Month::MARCH;
+    case 4:
+      return Month::APRIL;
+    case 5:
+      return Month::MAY;
+    case 6:
+      return Month::JUNE;
+    case 7: 
+      return Month::JULY;
+    case 8:
+      return Month::AUGUST;
+    case 9:
+      return Month::SEPTEMBER;
+    case 10:
+      return Month::OCTOBER;
+    case 11:
+      return Month::NOVEMBER;
+    case 12:
+      return Month::DECEMBER;
+    default:
+      return Month::JANUARY;
+
+  }
+}
+//function to translate int into DayOfWeek enum
+DayOfWeek getDayOfWeek(int dayofweek){
+  switch(dayofweek){
+    case 1:
+      return DayOfWeek::MONDAY;
+    case 2:
+      return DayOfWeek::TUESDAY;
+    case 3:
+      return DayOfWeek::WEDNESDAY;
+    case 4:
+      return DayOfWeek::THURSDAY;
+    case 5:
+      return DayOfWeek::FRIDAY;
+    case 6:
+      return DayOfWeek::SATURDAY;
+    case 7:
+      return DayOfWeek::SUNDAY; 
+    default:
+      return DayOfWeek::MONDAY;
+  }
+}
+//function to translate bool into SaveLight enum
+SaveLight getDL(bool DL){
+  switch(DL){
+    case 0:
+      return SaveLight::SAVING_TIME_INACTIVE;
+    case 1:
+      return SaveLight::SAVING_TIME_ACTIVE;
+    default:
+      return SaveLight::SAVING_TIME_INACTIVE;
+  }
+}
+//function to output water using stored volume, output volume per day using Torricelli's Law
+void torricellisLaw(int currentVolume, int volumeOut, short pin){
+  //if the volume requested or the water volume in the resivoir is zero return
+  if(currentVolume <= 0 || volumeOut <= 0){
+    return;
+  }
+  float r = 4.680;
+  float calcOut = 0.0;
+  //make sure the variables we are working with are floats
+  float currentVolumeF = currentVolume * 1.0;
+  float volumeOutF = volumeOut * 1.0;
+  //while calulated output so far is less than disired output
+  while (calcOut < volumeOutF){
+    //keep in contact while outputing
+    BLEDevice central = BLE.central();
+    //calculate volume of tube between resivoir and valve
+    float tubeVolume = (PI * 0.3175 * 0.3175 * 11.43);
+    //calculate water height
+    float height = currentVolumeF <= tubeVolume ?  ((currentVolumeF) / ( PI * 0.635 * 0.635) + 8.89) : (((11.43 + (currentVolumeF - tubeVolume) / (PI * r * r)) + 8.89));
+    //Torricelli's Law to get output velocity. Then multiply by orifice area
+    float flowrate = sqrt(2 * 980.665 * height) * 0.0185;
+    //open valve
+    digitalWrite(pin, HIGH);
+    //delay to let water flow
+    delay(100);
+    //calculate how much water has flown out and add to total
+    calcOut = calcOut + (flowrate * 0.1);
+    //keep track of total volume left
+    currentVolumeF = currentVolumeF - (flowrate * 0.1);
+  }
+  //once desired volume dispenced, close valve and return
+  digitalWrite(pin, LOW);
+  return;
+}
+
+
+void setup() {
+
+
+  // set valve pins to output mode
+  pinMode(valvePin1, OUTPUT);
+  pinMode(valvePin2, OUTPUT);
+  pinMode(valvePin3, OUTPUT);
+  pinMode(valvePin4, OUTPUT);
+  pinMode(valvePin5, OUTPUT);
+  pinMode(valvePin6, OUTPUT);
+  pinMode(valvePin7, OUTPUT);
+
+  // begin initialization
+  if (!BLE.begin()) {
+    //Serial.println("starting Bluetooth® Low Energy module failed!");
+    while (1);
+  }
+
+  // set advertised local name and service UUID:
+  BLE.setLocalName("Valve Control");
+  BLE.setAdvertisedService(valveControlService);
+
+  // add the characteristics to the service
+  valveControlService.addCharacteristic(valve1ActiveCharacteristic);
+  valveControlService.addCharacteristic(valve2ActiveCharacteristic);
+  valveControlService.addCharacteristic(valve3ActiveCharacteristic);
+  valveControlService.addCharacteristic(valve4ActiveCharacteristic);
+  valveControlService.addCharacteristic(valve5ActiveCharacteristic);
+  valveControlService.addCharacteristic(valve6ActiveCharacteristic);
+  valveControlService.addCharacteristic(valve7ActiveCharacteristic);
+
+  valveControlService.addCharacteristic(valve1ModeCharacteristic);
+  valveControlService.addCharacteristic(valve2ModeCharacteristic);
+  valveControlService.addCharacteristic(valve3ModeCharacteristic);
+  valveControlService.addCharacteristic(valve4ModeCharacteristic);
+  valveControlService.addCharacteristic(valve5ModeCharacteristic);
+  valveControlService.addCharacteristic(valve6ModeCharacteristic);
+  valveControlService.addCharacteristic(valve7ModeCharacteristic);
+
+  valveControlService.addCharacteristic(valve1VolumeCharacteristic);
+  valveControlService.addCharacteristic(valve2VolumeCharacteristic);
+  valveControlService.addCharacteristic(valve3VolumeCharacteristic);
+  valveControlService.addCharacteristic(valve4VolumeCharacteristic);
+  valveControlService.addCharacteristic(valve5VolumeCharacteristic);
+  valveControlService.addCharacteristic(valve6VolumeCharacteristic);
+  valveControlService.addCharacteristic(valve7VolumeCharacteristic);
+  
+  valveControlService.addCharacteristic(valve1TrackVolumeCharacteristic);
+  valveControlService.addCharacteristic(valve2TrackVolumeCharacteristic);
+  valveControlService.addCharacteristic(valve3TrackVolumeCharacteristic);
+  valveControlService.addCharacteristic(valve4TrackVolumeCharacteristic);
+  valveControlService.addCharacteristic(valve5TrackVolumeCharacteristic);
+  valveControlService.addCharacteristic(valve6TrackVolumeCharacteristic);
+  valveControlService.addCharacteristic(valve7TrackVolumeCharacteristic);
+
+  valveControlService.addCharacteristic(timeDayCharacteristic);
+  valveControlService.addCharacteristic(timeMonthCharacteristic);
+  valveControlService.addCharacteristic(timeYearCharacteristic);
+  valveControlService.addCharacteristic(timeHourCharacteristic);
+  valveControlService.addCharacteristic(timeMinCharacteristic);
+  valveControlService.addCharacteristic(timeSecCharacteristic);
+  valveControlService.addCharacteristic(timeDayofWeekCharacteristic);
+  valveControlService.addCharacteristic(timeDLSavingsCharacteristic);
+
+  valveControlService.addCharacteristic(waterHourCharacteristic);
+  valveControlService.addCharacteristic(waterMinCharacteristic);
+  valveControlService.addCharacteristic(waterDayCharacteristic);
+
+
+  valveControlService.addCharacteristic(valve1ManualCharacteristic);
+  valveControlService.addCharacteristic(valve2ManualCharacteristic);
+  valveControlService.addCharacteristic(valve3ManualCharacteristic);
+  valveControlService.addCharacteristic(valve4ManualCharacteristic);
+  valveControlService.addCharacteristic(valve5ManualCharacteristic);
+  valveControlService.addCharacteristic(valve6ManualCharacteristic);
+  valveControlService.addCharacteristic(valve7ManualCharacteristic);
+
+  valveControlService.addCharacteristic(valve1TopCharacteristic);
+  valveControlService.addCharacteristic(valve2TopCharacteristic);
+  valveControlService.addCharacteristic(valve3TopCharacteristic);
+  valveControlService.addCharacteristic(valve4TopCharacteristic);
+  valveControlService.addCharacteristic(valve5TopCharacteristic);
+  valveControlService.addCharacteristic(valve6TopCharacteristic);
+  valveControlService.addCharacteristic(valve7TopCharacteristic);
+
+  valveControlService.addCharacteristic(valve1ManVolumeCharacteristic);
+  valveControlService.addCharacteristic(valve2ManVolumeCharacteristic);
+  valveControlService.addCharacteristic(valve3ManVolumeCharacteristic);
+  valveControlService.addCharacteristic(valve4ManVolumeCharacteristic);
+  valveControlService.addCharacteristic(valve5ManVolumeCharacteristic);
+  valveControlService.addCharacteristic(valve6ManVolumeCharacteristic);
+  valveControlService.addCharacteristic(valve7ManVolumeCharacteristic);
+
+  valveControlService.addCharacteristic(resetTimeCharacteristic);
+
+
+
+  // add service
+  BLE.addService(valveControlService);
+
+  // set the initial value for the characeristic:
+  valve1ActiveCharacteristic.writeValue(false);
+  valve2ActiveCharacteristic.writeValue(false);
+  valve3ActiveCharacteristic.writeValue(false);
+  valve4ActiveCharacteristic.writeValue(false);
+  valve5ActiveCharacteristic.writeValue(false);
+  valve6ActiveCharacteristic.writeValue(false);
+  valve7ActiveCharacteristic.writeValue(false);
+
+  valve1ModeCharacteristic.writeValue(false);
+  valve2ModeCharacteristic.writeValue(false);
+  valve3ModeCharacteristic.writeValue(false);
+  valve4ModeCharacteristic.writeValue(false);
+  valve5ModeCharacteristic.writeValue(false);
+  valve6ModeCharacteristic.writeValue(false);
+  valve7ModeCharacteristic.writeValue(false);
+
+  valve1VolumeCharacteristic.writeValue(0);
+  valve2VolumeCharacteristic.writeValue(0);
+  valve3VolumeCharacteristic.writeValue(0);
+  valve4VolumeCharacteristic.writeValue(0);
+  valve5VolumeCharacteristic.writeValue(0);
+  valve6VolumeCharacteristic.writeValue(0);
+  valve7VolumeCharacteristic.writeValue(0);
+
+  valve1TrackVolumeCharacteristic.writeValue(0);
+  valve2TrackVolumeCharacteristic.writeValue(0);
+  valve3TrackVolumeCharacteristic.writeValue(0);
+  valve4TrackVolumeCharacteristic.writeValue(0);
+  valve5TrackVolumeCharacteristic.writeValue(0);
+  valve6TrackVolumeCharacteristic.writeValue(0);
+  valve7TrackVolumeCharacteristic.writeValue(0);
+
+  timeDayCharacteristic.writeValue(1);
+  timeMonthCharacteristic.writeValue(0);
+  timeYearCharacteristic.writeValue(1989);
+  timeHourCharacteristic.writeValue(0);
+  timeMinCharacteristic.writeValue(0);
+  timeSecCharacteristic.writeValue(0);
+  timeDayofWeekCharacteristic.writeValue(1);
+  timeDLSavingsCharacteristic.writeValue(0);
+
+  waterHourCharacteristic.writeValue(0);
+  waterMinCharacteristic.writeValue(60);
+  waterDayCharacteristic.writeValue(1);
+
+  valve1ManualCharacteristic.writeValue(false);
+  valve2ManualCharacteristic.writeValue(false);
+  valve3ManualCharacteristic.writeValue(false);
+  valve4ManualCharacteristic.writeValue(false);
+  valve5ManualCharacteristic.writeValue(false);
+  valve6ManualCharacteristic.writeValue(false);
+  valve7ManualCharacteristic.writeValue(false);
+
+  valve1TopCharacteristic.writeValue(false);
+  valve2TopCharacteristic.writeValue(false);
+  valve3TopCharacteristic.writeValue(false);
+  valve4TopCharacteristic.writeValue(false);
+  valve5TopCharacteristic.writeValue(false);
+  valve6TopCharacteristic.writeValue(false);
+  valve7TopCharacteristic.writeValue(false);
+
+  valve1ManVolumeCharacteristic.writeValue(0);
+  valve2ManVolumeCharacteristic.writeValue(0);
+  valve3ManVolumeCharacteristic.writeValue(0);
+  valve4ManVolumeCharacteristic.writeValue(0);
+  valve5ManVolumeCharacteristic.writeValue(0);
+  valve6ManVolumeCharacteristic.writeValue(0);
+  valve7ManVolumeCharacteristic.writeValue(0);
+
+  resetTimeCharacteristic.writeValue(false);
+
+  // start advertising
+  BLE.advertise();
+
+  //set initial default time
+  RTC.begin();
+  RTCTime Time(timeDayCharacteristic.value(), getMonth(timeMonthCharacteristic.value()), timeYearCharacteristic.value(), timeHourCharacteristic.value(), timeMinCharacteristic.value(),timeSecCharacteristic.value(), getDayOfWeek(timeDayofWeekCharacteristic.value()), getDL(timeDLSavingsCharacteristic.value()));
+  RTC.setTime(Time);
+  //Setup for first scan 
+  firstScan = true;
+}
+
+void loop() {
+  // listen for Bluetooth® Low Energy peripherals to connect:
+  BLEDevice central = BLE.central();
+
+  // if a central is connected to peripheral:
+  if (central) {
+    // while the central is still connected to peripheral:
+    while (central.connected()) {
+      //if the app connects to the peripheral and writes to the caracteristics for time, set the time to when the app connected and set firstScan to false to keep clock moving forward
+      if(firstScan){
+        if(resetTimeCharacteristic.value()){
+          RTCTime Time(timeDayCharacteristic.value(), getMonth(timeMonthCharacteristic.value()), timeYearCharacteristic.value(), timeHourCharacteristic.value(), timeMinCharacteristic.value(),timeSecCharacteristic.value(), getDayOfWeek(timeDayofWeekCharacteristic.value()), getDL(timeDLSavingsCharacteristic.value()));
+          RTC.setTime(Time);
+          firstScan = false;
+        }
+      }
+
+      //If the signal is given that the reservoir has been topped off, set tracked volume to max and reset signal
+      if(valve1TopCharacteristic.value()){
+        valve1TrackVolumeCharacteristic.writeValue(1000);
+        valve1TopCharacteristic.writeValue(false);
+      }
+      if(valve2TopCharacteristic.value()){
+        valve2TrackVolumeCharacteristic.writeValue(1000);
+        valve2TopCharacteristic.writeValue(false);
+      }
+      if(valve3TopCharacteristic.value()){
+        valve3TrackVolumeCharacteristic.writeValue(1000);
+        valve3TopCharacteristic.writeValue(false);
+      }
+      if(valve4TopCharacteristic.value()){
+        valve4TrackVolumeCharacteristic.writeValue(1000);
+        valve4TopCharacteristic.writeValue(false);
+      }
+      if(valve5TopCharacteristic.value()){
+        valve5TrackVolumeCharacteristic.writeValue(1000);
+        valve5TopCharacteristic.writeValue(false);
+      }
+      if(valve6TopCharacteristic.value()){
+        valve6TrackVolumeCharacteristic.writeValue(1000);
+        valve6TopCharacteristic.writeValue(false);
+      }
+      if(valve7TopCharacteristic.value()){
+        valve7TrackVolumeCharacteristic.writeValue(1000);
+        valve7TopCharacteristic.writeValue(false);
+      }
+
+      //control valves manualy, only one valve may be open at a time
+      if (valve1ManualCharacteristic.value()){
+        //check if valve is active
+        if(valve1ActiveCharacteristic.value()){
+          if (digitalRead(valvePin2) == LOW && digitalRead(valvePin3) == LOW && digitalRead(valvePin4) == LOW && digitalRead(valvePin5) == LOW && digitalRead(valvePin6) == LOW && digitalRead(valvePin7) == LOW){
+              //call funtction to dispense water
+              torricellisLaw(valve1TrackVolumeCharacteristic.value(),valve1ManVolumeCharacteristic.value(),valvePin1);
+              //update tracked volume
+              valve1TrackVolumeCharacteristic.writeValue(valve1TrackVolumeCharacteristic.value() - valve1ManVolumeCharacteristic.value());
+              if(valve1TrackVolumeCharacteristic.value() < 0){
+                valve1TrackVolumeCharacteristic.writeValue(0);
+              }
+          }
+        }
+        else{
+          digitalWrite(valvePin1, LOW);
+        }
+        valve1ManualCharacteristic.writeValue(false);
+      }
+
+      if (valve2ManualCharacteristic.value()){
+        //check if valve is active
+        if(valve2ActiveCharacteristic.value()){
+          if (digitalRead(valvePin1) == LOW && digitalRead(valvePin3) == LOW && digitalRead(valvePin4) == LOW && digitalRead(valvePin5) == LOW && digitalRead(valvePin6) == LOW && digitalRead(valvePin7) == LOW){
+              //call funtction to dispense water
+              torricellisLaw(valve2TrackVolumeCharacteristic.value(),valve2ManVolumeCharacteristic.value(),valvePin2);
+              //update tracked volume
+              valve2TrackVolumeCharacteristic.writeValue(valve2TrackVolumeCharacteristic.value() - valve2ManVolumeCharacteristic.value());
+              if(valve2TrackVolumeCharacteristic.value() < 0){
+                valve2TrackVolumeCharacteristic.writeValue(0);
+              }
+          }
+        }
+        else{
+          digitalWrite(valvePin2, LOW);
+        }
+        valve2ManualCharacteristic.writeValue(false);
+      }
+
+      if (valve3ManualCharacteristic.value()){
+        //check if valve is active
+        if(valve3ActiveCharacteristic.value()){
+          if (digitalRead(valvePin1) == LOW && digitalRead(valvePin2) == LOW && digitalRead(valvePin4) == LOW && digitalRead(valvePin5) == LOW && digitalRead(valvePin6) == LOW && digitalRead(valvePin7) == LOW){
+              //call funtction to dispense water
+              torricellisLaw(valve3TrackVolumeCharacteristic.value(),valve3ManVolumeCharacteristic.value(),valvePin3);
+              //update tracked volume
+              valve3TrackVolumeCharacteristic.writeValue(valve3TrackVolumeCharacteristic.value() - valve3ManVolumeCharacteristic.value());
+              if(valve3TrackVolumeCharacteristic.value() < 0){
+                valve3TrackVolumeCharacteristic.writeValue(0);
+              }
+          }
+        }
+        else{
+          digitalWrite(valvePin3, LOW);
+        }
+        valve3ManualCharacteristic.writeValue(false);
+      }
+
+      if (valve4ManualCharacteristic.value()){
+        //check if valve is active
+        if(valve4ActiveCharacteristic.value()){
+          if (digitalRead(valvePin1) == LOW && digitalRead(valvePin2) == LOW && digitalRead(valvePin3) == LOW && digitalRead(valvePin5) == LOW && digitalRead(valvePin6) == LOW && digitalRead(valvePin7) == LOW){
+              //call funtction to dispense water
+              torricellisLaw(valve4TrackVolumeCharacteristic.value(),valve4ManVolumeCharacteristic.value(),valvePin4);
+              //update tracked volume
+              valve4TrackVolumeCharacteristic.writeValue(valve4TrackVolumeCharacteristic.value() - valve4ManVolumeCharacteristic.value());
+              if(valve4TrackVolumeCharacteristic.value() < 0){
+                valve4TrackVolumeCharacteristic.writeValue(0);
+              }
+          }
+        }
+        else{
+          digitalWrite(valvePin4, LOW);
+        }
+        valve4ManualCharacteristic.writeValue(false);
+      }
+
+      if (valve5ManualCharacteristic.value()){
+        //check if valve is active
+        if(valve5ActiveCharacteristic.value()){
+          if (digitalRead(valvePin1) == LOW && digitalRead(valvePin2) == LOW && digitalRead(valvePin3) == LOW && digitalRead(valvePin4) == LOW && digitalRead(valvePin6) == LOW && digitalRead(valvePin7) == LOW){
+              //call funtction to dispense water
+              torricellisLaw(valve5TrackVolumeCharacteristic.value(),valve5ManVolumeCharacteristic.value(),valvePin5);
+              //update tracked volume
+              valve5TrackVolumeCharacteristic.writeValue(valve5TrackVolumeCharacteristic.value() - valve5ManVolumeCharacteristic.value());
+              if(valve5TrackVolumeCharacteristic.value() < 0){
+                valve5TrackVolumeCharacteristic.writeValue(0);
+              }
+          }
+        }
+        else{
+          digitalWrite(valvePin5, LOW);
+        }
+        valve5ManualCharacteristic.writeValue(false);
+      }
+      
+      if (valve6ManualCharacteristic.value()){
+        //check if valve is active
+        if(valve6ActiveCharacteristic.value()){
+          if (digitalRead(valvePin1) == LOW && digitalRead(valvePin2) == LOW && digitalRead(valvePin3) == LOW && digitalRead(valvePin4) == LOW && digitalRead(valvePin5) == LOW && digitalRead(valvePin7) == LOW){
+              //call funtction to dispense water
+              torricellisLaw(valve6TrackVolumeCharacteristic.value(),valve6ManVolumeCharacteristic.value(),valvePin6);
+              //update tracked volume
+              valve6TrackVolumeCharacteristic.writeValue(valve6TrackVolumeCharacteristic.value() - valve6ManVolumeCharacteristic.value());
+              if(valve6TrackVolumeCharacteristic.value() < 0){
+                valve6TrackVolumeCharacteristic.writeValue(0);
+              }
+          }
+        }
+        else{
+          digitalWrite(valvePin6, LOW);
+        }
+        valve6ManualCharacteristic.writeValue(false);
+      }
+      
+      if (valve7ManualCharacteristic.value()){
+        //check if valve is active
+        if(valve7ActiveCharacteristic.value()){
+          if (digitalRead(valvePin1) == LOW && digitalRead(valvePin2) == LOW && digitalRead(valvePin3) == LOW && digitalRead(valvePin4) == LOW && digitalRead(valvePin5) == LOW && digitalRead(valvePin6) == LOW){
+              //call funtction to dispense water
+              torricellisLaw(valve7TrackVolumeCharacteristic.value(),valve7ManVolumeCharacteristic.value(),valvePin7);
+              //update tracked volume
+              valve7TrackVolumeCharacteristic.writeValue(valve7TrackVolumeCharacteristic.value() - valve7ManVolumeCharacteristic.value());
+              if(valve7TrackVolumeCharacteristic.value() < 0){
+                valve7TrackVolumeCharacteristic.writeValue(0);
+              }
+          }
+        }
+        else{
+          digitalWrite(valvePin7, LOW);
+        }
+        valve7ManualCharacteristic.writeValue(false);
+      }
+
+      RTCTime currentTime;
+      RTC.getTime(currentTime);
+
+
+      // use the values to control the Valaves
+      // if set time and hasn't run today
+      if(currentTime.getHour() == waterHourCharacteristic.value() && currentTime.getMinutes() == waterMinCharacteristic.value() && currentTime.getDayOfMonth() != lastDay){
+        lastDay = currentTime.getDayOfMonth();
+        
+        //if valve active
+        if (valve1ActiveCharacteristic.value()){
+          //if mode is daily or correct day
+          if (valve1ModeCharacteristic.value() == 0 || waterDayCharacteristic.value() == DayOfWeek2int(currentTime.getDayOfWeek(),false)){
+            //if other valves are not open
+            if (digitalRead(valvePin2) == LOW && digitalRead(valvePin3) == LOW && digitalRead(valvePin4) == LOW && digitalRead(valvePin5) == LOW && digitalRead(valvePin6) == LOW && digitalRead(valvePin7) == LOW){
+              //call funtction to dispense water
+              torricellisLaw(valve1TrackVolumeCharacteristic.value(),valve1VolumeCharacteristic.value(),valvePin1);
+              //update tracked volume
+              valve1TrackVolumeCharacteristic.writeValue(valve1TrackVolumeCharacteristic.value() - valve1VolumeCharacteristic.value());
+              if(valve1TrackVolumeCharacteristic.value() < 0){
+                valve1TrackVolumeCharacteristic.writeValue(0);
+              }
+            }
+          }
+        }
+
+        if (valve2ActiveCharacteristic.value()){
+          //if mode is daily or correct day
+          if(valve2ModeCharacteristic.value() == 0 || waterDayCharacteristic.value() == DayOfWeek2int(currentTime.getDayOfWeek(),false)){
+            //if other valves are not open
+            if (digitalRead(valvePin1) == LOW && digitalRead(valvePin3) == LOW && digitalRead(valvePin4) == LOW && digitalRead(valvePin5) == LOW && digitalRead(valvePin6) == LOW && digitalRead(valvePin7) == LOW){
+              //call funtction to dispense water
+              torricellisLaw(valve2TrackVolumeCharacteristic.value(),valve2VolumeCharacteristic.value(),valvePin2);
+              //update tracked volume
+              valve2TrackVolumeCharacteristic.writeValue(valve2TrackVolumeCharacteristic.value() - valve2VolumeCharacteristic.value());
+              if(valve2TrackVolumeCharacteristic.value() < 0){
+                valve2TrackVolumeCharacteristic.writeValue(0);
+              }
+            }
+          }
+        }
+
+        if (valve3ActiveCharacteristic.value()){
+          //if mode is daily or correct day
+          if (valve3ModeCharacteristic.value() == 0 || waterDayCharacteristic.value() == DayOfWeek2int(currentTime.getDayOfWeek(),false)){
+          //if other valves are not open
+            if (digitalRead(valvePin1) == LOW && digitalRead(valvePin2) == LOW && digitalRead(valvePin4) == LOW && digitalRead(valvePin5) == LOW && digitalRead(valvePin6) == LOW && digitalRead(valvePin7) == LOW){
+              //call funtction to dispense water
+              torricellisLaw(valve3TrackVolumeCharacteristic.value(),valve3VolumeCharacteristic.value(),valvePin3);
+              //update tracked volume
+              valve3TrackVolumeCharacteristic.writeValue(valve3TrackVolumeCharacteristic.value() - valve3VolumeCharacteristic.value());
+              if(valve3TrackVolumeCharacteristic.value() < 0){
+                valve3TrackVolumeCharacteristic.writeValue(0);
+              }
+            }
+          }
+        }
+
+        if (valve4ActiveCharacteristic.value()){
+          //if mode is daily or correct day
+          if (valve5ModeCharacteristic.value() == 0 || waterDayCharacteristic.value() == DayOfWeek2int(currentTime.getDayOfWeek(),false)){
+            //if other valves are not open
+            if (digitalRead(valvePin1) == LOW && digitalRead(valvePin2) == LOW && digitalRead(valvePin3) == LOW && digitalRead(valvePin5) == LOW && digitalRead(valvePin6) == LOW && digitalRead(valvePin7) == LOW){
+              //call funtction to dispense water
+              torricellisLaw(valve4TrackVolumeCharacteristic.value(),valve4VolumeCharacteristic.value(),valvePin4);
+              //update tracked volume
+              valve4TrackVolumeCharacteristic.writeValue(valve4TrackVolumeCharacteristic.value() - valve4VolumeCharacteristic.value());
+              if(valve4TrackVolumeCharacteristic.value() < 0){
+                valve4TrackVolumeCharacteristic.writeValue(0);
+              }
+            }
+          }
+        }
+
+        if (valve5ActiveCharacteristic.value()){
+          //if mode is daily or correct day
+          if (valve5ModeCharacteristic.value() == 0 || waterDayCharacteristic.value() == DayOfWeek2int(currentTime.getDayOfWeek(),false)){
+            //if other valves are not open
+            if (digitalRead(valvePin1) == LOW && digitalRead(valvePin2) == LOW && digitalRead(valvePin3) == LOW && digitalRead(valvePin4) == LOW && digitalRead(valvePin6) == LOW && digitalRead(valvePin7) == LOW){
+              //call funtction to dispense water
+              torricellisLaw(valve5TrackVolumeCharacteristic.value(),valve5VolumeCharacteristic.value(),valvePin5);
+              //update tracked volume
+              valve5TrackVolumeCharacteristic.writeValue(valve5TrackVolumeCharacteristic.value() - valve5VolumeCharacteristic.value());
+              if(valve5TrackVolumeCharacteristic.value() < 0){
+                valve5TrackVolumeCharacteristic.writeValue(0);
+              }
+            }
+          }
+        }
+
+        if (valve6ActiveCharacteristic.value()){
+          //if mode is daily or correct day
+          if (valve6ModeCharacteristic.value() == 0 || waterDayCharacteristic.value() == DayOfWeek2int(currentTime.getDayOfWeek(),false)){
+            //if other valves are not open
+            if (digitalRead(valvePin1) == LOW && digitalRead(valvePin2) == LOW && digitalRead(valvePin3) == LOW && digitalRead(valvePin4) == LOW && digitalRead(valvePin5) == LOW && digitalRead(valvePin7) == LOW){
+              //call funtction to dispense water
+              torricellisLaw(valve6TrackVolumeCharacteristic.value(),valve6VolumeCharacteristic.value(),valvePin6);
+              //update tracked volume
+              valve6TrackVolumeCharacteristic.writeValue(valve6TrackVolumeCharacteristic.value() - valve6VolumeCharacteristic.value());
+              if(valve6TrackVolumeCharacteristic.value() < 0){
+                valve6TrackVolumeCharacteristic.writeValue(0);
+              }
+            }
+          }
+        }
+
+        if (valve7ActiveCharacteristic.value()){
+          //if mode is daily or correct day
+          if (valve7ModeCharacteristic.value() == 0 || waterDayCharacteristic.value() == DayOfWeek2int(currentTime.getDayOfWeek(),false)){
+            //if other valves are not open
+            if (digitalRead(valvePin1) == LOW && digitalRead(valvePin2) == LOW && digitalRead(valvePin3) == LOW && digitalRead(valvePin4) == LOW && digitalRead(valvePin5) == LOW && digitalRead(valvePin6) == LOW){
+              //call funtction to dispense water
+              torricellisLaw(valve7TrackVolumeCharacteristic.value(),valve7VolumeCharacteristic.value(),valvePin7);
+              //update tracked volume
+              valve7TrackVolumeCharacteristic.writeValue(valve7TrackVolumeCharacteristic.value() - valve7VolumeCharacteristic.value());
+              if(valve7TrackVolumeCharacteristic.value() < 0){
+                valve7TrackVolumeCharacteristic.writeValue(0);
+              }
+            }
+          }
+        }
+      }
+    // when the central disconnects
+    //close valves in case BLE disconnects while valve opening is happening
+    digitalWrite(valvePin1, LOW);
+    digitalWrite(valvePin2, LOW);
+    digitalWrite(valvePin3, LOW);
+    digitalWrite(valvePin4, LOW);
+    digitalWrite(valvePin5, LOW);
+    digitalWrite(valvePin6, LOW);
+    digitalWrite(valvePin7, LOW);
+    //reset year and variable so on reconnect time is updated
+    resetTimeCharacteristic.writeValue(false);
+    firstScan = true;
+    }
+  }
+
+
+
+  RTCTime currentTime;
+  RTC.getTime(currentTime);
+
+  // use the values to control the Valaves
+  // if set time 
+  if(currentTime.getHour() == waterHourCharacteristic.value() && currentTime.getMinutes() == waterMinCharacteristic.value() && currentTime.getDayOfMonth() != lastDay){
+    lastDay = currentTime.getDayOfMonth();
+
+    //if valve active
+    if (valve1ActiveCharacteristic.value()){
+      //if mode is daily or correct day
+      if (valve1ModeCharacteristic.value() == 0 || waterDayCharacteristic.value() == DayOfWeek2int(currentTime.getDayOfWeek(),false)){
+        //if other valves are not open
+        if (digitalRead(valvePin2) == LOW && digitalRead(valvePin3) == LOW && digitalRead(valvePin4) == LOW && digitalRead(valvePin5) == LOW && digitalRead(valvePin6) == LOW && digitalRead(valvePin7) == LOW){
+          //call funtction to dispense water
+          torricellisLaw(valve1TrackVolumeCharacteristic.value(),valve1VolumeCharacteristic.value(),valvePin1);
+          //update tracked volume
+          valve1TrackVolumeCharacteristic.writeValue(valve1TrackVolumeCharacteristic.value() - valve1VolumeCharacteristic.value());
+          if(valve1TrackVolumeCharacteristic.value() < 0){
+            valve1TrackVolumeCharacteristic.writeValue(0);
+          }
+        }
+      }
+    }
+
+    if (valve2ActiveCharacteristic.value()){
+      //if mode is daily or correct day
+      if(valve2ModeCharacteristic.value() == 0 || waterDayCharacteristic.value() == DayOfWeek2int(currentTime.getDayOfWeek(),false)){
+        //if other valves are not open
+        if (digitalRead(valvePin1) == LOW && digitalRead(valvePin3) == LOW && digitalRead(valvePin4) == LOW && digitalRead(valvePin5) == LOW && digitalRead(valvePin6) == LOW && digitalRead(valvePin7) == LOW){
+          //call funtction to dispense water
+          torricellisLaw(valve2TrackVolumeCharacteristic.value(),valve2VolumeCharacteristic.value(),valvePin2);
+          //update tracked volume
+          valve2TrackVolumeCharacteristic.writeValue(valve2TrackVolumeCharacteristic.value() - valve2VolumeCharacteristic.value());
+          if(valve2TrackVolumeCharacteristic.value() < 0){
+            valve2TrackVolumeCharacteristic.writeValue(0);
+          }
+        }
+      }
+    }
+
+    if (valve3ActiveCharacteristic.value()){
+      //if mode is daily or correct day
+      if (valve3ModeCharacteristic.value() == 0 || waterDayCharacteristic.value() == DayOfWeek2int(currentTime.getDayOfWeek(),false)){
+      //if other valves are not open
+        if (digitalRead(valvePin1) == LOW && digitalRead(valvePin2) == LOW && digitalRead(valvePin4) == LOW && digitalRead(valvePin5) == LOW && digitalRead(valvePin6) == LOW && digitalRead(valvePin7) == LOW){
+          //call funtction to dispense water
+          torricellisLaw(valve3TrackVolumeCharacteristic.value(),valve3VolumeCharacteristic.value(),valvePin3);
+          //update tracked volume
+          valve3TrackVolumeCharacteristic.writeValue(valve3TrackVolumeCharacteristic.value() - valve3VolumeCharacteristic.value());
+          if(valve3TrackVolumeCharacteristic.value() < 0){
+            valve3TrackVolumeCharacteristic.writeValue(0);
+          }
+        }
+      }
+    }
+
+    if (valve4ActiveCharacteristic.value()){
+      //if mode is daily or correct day
+      if (valve5ModeCharacteristic.value() == 0 || waterDayCharacteristic.value() == DayOfWeek2int(currentTime.getDayOfWeek(),false)){
+        //if other valves are not open
+        if (digitalRead(valvePin1) == LOW && digitalRead(valvePin2) == LOW && digitalRead(valvePin3) == LOW && digitalRead(valvePin5) == LOW && digitalRead(valvePin6) == LOW && digitalRead(valvePin7) == LOW){
+          //call funtction to dispense water
+          torricellisLaw(valve4TrackVolumeCharacteristic.value(),valve4VolumeCharacteristic.value(),valvePin4);
+          //update tracked volume
+          valve4TrackVolumeCharacteristic.writeValue(valve4TrackVolumeCharacteristic.value() - valve4VolumeCharacteristic.value());
+          if(valve4TrackVolumeCharacteristic.value() < 0){
+            valve4TrackVolumeCharacteristic.writeValue(0);
+          }
+        }
+      }
+    }
+
+    if (valve5ActiveCharacteristic.value()){
+      //if mode is daily or correct day
+      if (valve5ModeCharacteristic.value() == 0 || waterDayCharacteristic.value() == DayOfWeek2int(currentTime.getDayOfWeek(),false)){
+        //if other valves are not open
+        if (digitalRead(valvePin1) == LOW && digitalRead(valvePin2) == LOW && digitalRead(valvePin3) == LOW && digitalRead(valvePin4) == LOW && digitalRead(valvePin6) == LOW && digitalRead(valvePin7) == LOW){
+          //call funtction to dispense water
+          torricellisLaw(valve5TrackVolumeCharacteristic.value(),valve5VolumeCharacteristic.value(),valvePin5);
+          //update tracked volume
+          valve5TrackVolumeCharacteristic.writeValue(valve5TrackVolumeCharacteristic.value() - valve5VolumeCharacteristic.value());
+          if(valve5TrackVolumeCharacteristic.value() < 0){
+            valve5TrackVolumeCharacteristic.writeValue(0);
+          }
+        }
+      }
+    }
+
+    if (valve6ActiveCharacteristic.value()){
+      //if mode is daily or correct day
+      if (valve6ModeCharacteristic.value() == 0 || waterDayCharacteristic.value() == DayOfWeek2int(currentTime.getDayOfWeek(),false)){
+        //if other valves are not open
+        if (digitalRead(valvePin1) == LOW && digitalRead(valvePin2) == LOW && digitalRead(valvePin3) == LOW && digitalRead(valvePin4) == LOW && digitalRead(valvePin5) == LOW && digitalRead(valvePin7) == LOW){
+          //call funtction to dispense water
+          torricellisLaw(valve6TrackVolumeCharacteristic.value(),valve6VolumeCharacteristic.value(),valvePin6);
+          //update tracked volume
+          valve6TrackVolumeCharacteristic.writeValue(valve6TrackVolumeCharacteristic.value() - valve6VolumeCharacteristic.value());
+          if(valve6TrackVolumeCharacteristic.value() < 0){
+            valve6TrackVolumeCharacteristic.writeValue(0);
+          }
+        }
+      }
+    }
+
+    if (valve7ActiveCharacteristic.value()){
+      //if mode is daily or correct day
+      if (valve7ModeCharacteristic.value() == 0 || waterDayCharacteristic.value() == DayOfWeek2int(currentTime.getDayOfWeek(),false)){
+        //if other valves are not open
+        if (digitalRead(valvePin1) == LOW && digitalRead(valvePin2) == LOW && digitalRead(valvePin3) == LOW && digitalRead(valvePin4) == LOW && digitalRead(valvePin5) == LOW && digitalRead(valvePin6) == LOW){
+          //call funtction to dispense water
+          torricellisLaw(valve7TrackVolumeCharacteristic.value(),valve7VolumeCharacteristic.value(),valvePin7);
+          //update tracked volume
+          valve7TrackVolumeCharacteristic.writeValue(valve7TrackVolumeCharacteristic.value() - valve7VolumeCharacteristic.value());
+          if(valve7TrackVolumeCharacteristic.value() < 0){
+            valve7TrackVolumeCharacteristic.writeValue(0);
+          }
+        }
+      }
+    }
+  }
+}
